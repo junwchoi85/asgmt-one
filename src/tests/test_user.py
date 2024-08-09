@@ -1,5 +1,5 @@
 import pytest
-from adapters.repositories.user_repository import UserRepository
+from interface_adapters.repositories.user_repository import UserRepository
 from use_cases.user_use_case import CreateUser
 from entities.user import User
 

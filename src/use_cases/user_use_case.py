@@ -1,4 +1,4 @@
-from adapters.repositories.user_repository import UserRepository
+from interface_adapters.repositories.user_repository import UserRepository
 from entities.user import User
 
 class CreateUser:
