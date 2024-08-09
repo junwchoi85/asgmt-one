@@ -1,6 +1,21 @@
 import sqlite3
 
+
+def create_connection() -> sqlite3.Connection:
+    """
+    Function to create a connection to the database
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect('mseboo.db')
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
 def setup_database():
+    """
+    Function to setup the database
+    """
     conn = sqlite3.connect('mseboo.db')
     c = conn.cursor()
 
