@@ -1,3 +1,10 @@
+# Project Setup
+```bash
+make install
+````
+
+
+
 # pytest 사용을 위한 가상환경 설정
 - https://docs.pytest.org/en/7.1.x/getting-started.html
 ## 가상환경 설정
