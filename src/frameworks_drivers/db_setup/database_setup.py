@@ -1,5 +1,17 @@
 import sqlite3
 
+# Global variable to store the connection
+_connection = None
+
+def get_connection() -> sqlite3.Connection:
+    """
+    Function to get the connection to the database
+    """
+    # Use the global connection if it exists
+    global _connection
+    if _connection is None:
+        _connection = create_connection()
+    return _connection
 
 def create_connection() -> sqlite3.Connection:
     """
@@ -16,7 +28,7 @@ def setup_database():
     """
     Function to setup the database
     """
-    conn = sqlite3.connect('mseboo.db')
+    conn = get_connection()
     c = conn.cursor()
 
     # Drop tables if they exist
@@ -84,6 +96,3 @@ def setup_database():
 
     conn.commit()
     conn.close()
-
-if __name__ == '__main__':
-    setup_database()
