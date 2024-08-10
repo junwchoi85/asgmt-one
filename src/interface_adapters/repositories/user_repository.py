@@ -1,4 +1,4 @@
-from frameworks_drivers.db_setup.database_setup import create_connection
+from frameworks_drivers.db_setup.database_setup import get_connection
 from entities.user import User
 
 class UserRepository:
@@ -12,7 +12,7 @@ class UserRepository:
         :return: None
         """
         try:
-            conn = create_connection()
+            conn = get_connection()
             c = conn.cursor()
             c.execute(
                 '''
@@ -25,6 +25,21 @@ class UserRepository:
             return True
         except Exception as e:
             return False
+    
+    def get_last_user_code(seff) -> str:
+        """
+        Get the last user code
+        :return: User code
+        """
+        conn = get_connection()
+        c = conn.cursor()
+        c.execute(
+            '''
+            SELECT user_code FROM user ORDER BY user_id DESC LIMIT 1
+            ''')
+        row = c.fetchone()
+        conn.close()
+        return row[0] if row else None
     
     def get_by_username(self, username: str) -> User:
         """
