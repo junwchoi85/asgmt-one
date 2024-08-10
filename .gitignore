@@ -1306,3 +1306,5 @@ one/lib/python3.12/site-packages/click-8.1.7.dist-info/REQUESTED
 one/lib/python3.12/site-packages/click-8.1.7.dist-info/top_level.txt
 one/lib/python3.12/site-packages/click-8.1.7.dist-info/WHEEL
 src/interface_adapters/cli/__pycache__/greeting_cli.cpython-312.pyc
+src/interface_adapters/cli/__pycache__/clear_screen_cli.cpython-312.pyc
+src/interface_adapters/cli/__pycache__/sign_up_cli.cpython-312.pyc
