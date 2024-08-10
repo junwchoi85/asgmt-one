@@ -19,14 +19,11 @@ def signUp(username, password):
         return
     db_cursor = connection.cursor()
 
-    user = User(username, password)
-
-
     #TODO: Implement error handling
     user_repository = UserRepository(db_cursor)
     create_user_use_case = UserUseCase(user_repository)
 
-    result = create_user_use_case.createUser(user)
+    result = create_user_use_case.createUser(username, password)
 
     click.echo('User created successfully') if result else click.echo('User creation failed')
     
