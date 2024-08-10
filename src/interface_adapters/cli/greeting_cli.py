@@ -1,9 +1,7 @@
 import click
-import os
 
-def clear_screen():
-    """ Clear the screen """
-    os.system('cls' if os.name == 'nt' else 'clear')
+from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.sign_up_cli import signUp
 
 @click.command()
 def greet():
@@ -11,14 +9,14 @@ def greet():
     clear_screen()
     click.echo(
         """
-        *************************************************
-        * Hello, welcome to the Car Rental System!      *
-        * Please choose an option from the menu below:  *
-        *                                               *
-        * 1. Sign In                                    *
-        * 2. Sign Up                                    *
-        * 3. Exit                                       *
-        *************************************************
+        ============== Car Rental System ==============
+         Hello, welcome to the Car Rental System!      
+         Please choose an option from the menu below:  
+                                                       
+         1. Sign In                                    
+         2. Sign Up                                    
+         3. Exit                                       
+        ===============================================
         """)
 
     option = click.prompt('Input number ', type=int)
@@ -30,7 +28,7 @@ def greet():
     elif option == 2:
         signUp()
     elif option == 3:
-        exit()
+        exit_system()
 
 @click.command()
 def signIn():
@@ -39,14 +37,8 @@ def signIn():
     click.echo('Sign In')
 
 @click.command()
-def signUp():
-    """ Sign Up """
-    clear_screen()
-    click.echo('Sign Up')
-
-@click.command()
-def exit():
+def exit_system():
     """ Exit """
-    clear_screen()
+    # clear_screen()
     click.echo('Bye bye!')
     exit()
