@@ -32,9 +32,9 @@ class UserUseCase:
             if not username or not password:
                 raise ValueError("username과 password는 필수입니다.")
             
-            user_id = str(uuid.uuid4())
+            # user_id = str(uuid.uuid4())
             new_user_code = self.generate_new_user_code()
-            user = User(user_id, new_user_code, username, password)
+            user = User(None, new_user_code, username, password)
         
         return self.user_repo.save(user)
 

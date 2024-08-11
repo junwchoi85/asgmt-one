@@ -38,7 +38,7 @@ class UserRepository:
             '''
             SELECT user_code FROM user ORDER BY user_id DESC LIMIT 1
             ''')
-        row = c.fetchone()
+        row = self.db_cursor.fetchone()
         # conn.close()
         return row[0] if row else None
     

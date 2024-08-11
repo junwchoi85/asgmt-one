@@ -23,7 +23,7 @@ def signUp(username, password):
     user_repository = UserRepository(db_cursor)
     create_user_use_case = UserUseCase(user_repository)
 
-    result = create_user_use_case.createUser(username, password)
+    result = create_user_use_case.createUser(username=username, password=password)
 
     click.echo('User created successfully') if result else click.echo('User creation failed')
     
