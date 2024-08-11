@@ -12,7 +12,7 @@ def connection():
 @pytest.fixture(scope='session')
 def setup_database_fixture(connection):
     # 세션 범위에서 테이블 생성
-    setup_database()
+    setup_database(connection)
     yield
     cursor = connection.cursor()
     cursor.execute('DROP TABLE IF EXISTS user;')

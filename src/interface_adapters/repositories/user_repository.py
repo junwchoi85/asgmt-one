@@ -12,33 +12,34 @@ class UserRepository:
         :return: None
         """
         try:
-            conn = get_connection()
-            c = conn.cursor()
-            c.execute(
+            # conn = get_connection()
+            # c = conn.cursor()
+            self.db_cursor.execute(
                 '''
                 INSERT INTO user (user_id, user_code, username, password)
                 VALUES (?, ?, ?, ?)
                 ''',
                 (user.user_id, user.user_code, user.username, user.password))
-            conn.commit()
-            conn.close()
+            self.db_cursor.connection.commit()
+            # conn.close()
             return True
         except Exception as e:
+            print(e)
             return False
     
-    def get_last_user_code(seff) -> str:
+    def get_last_user_code(self) -> str:
         """
         Get the last user code
         :return: User code
         """
-        conn = get_connection()
-        c = conn.cursor()
-        c.execute(
+        # conn = get_connection()
+        # c = conn.cursor()
+        self.db_cursor.execute(
             '''
             SELECT user_code FROM user ORDER BY user_id DESC LIMIT 1
             ''')
         row = c.fetchone()
-        conn.close()
+        # conn.close()
         return row[0] if row else None
     
     def get_by_username(self, username: str) -> User:
@@ -47,13 +48,13 @@ class UserRepository:
         :param username: Username
         :return: User object
         """
-        conn = create_connection()
-        c = conn.cursor()
-        c.execute(
+        # conn = get_connection()
+        # c = conn.cursor()
+        self.db_cursor.execute(
             '''
             SELECT * FROM user WHERE username = ?
             ''',
             (username,))
-        row = c.fetchone()
-        conn.close()
+        row = self.db_cursor.fetchone()
+        # conn.close()
         return User(row[0], row[1], row[2], row[3]) if row else None
