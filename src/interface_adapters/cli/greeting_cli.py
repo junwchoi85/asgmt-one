@@ -2,7 +2,6 @@ import click
 
 from interface_adapters.cli.clear_screen_cli import clear_screen
 from interface_adapters.cli.sign_up_cli import signUp
-from interface_adapters.cli.sign_in_cli import signIn
 
 @click.command()
 def greet():
@@ -30,6 +29,12 @@ def greet():
         signUp()
     elif option == 3:
         exit_system()
+
+@click.command()
+def signIn():
+    """ Sign In """
+    clear_screen()
+    click.echo('Sign In')
 
 @click.command()
 def exit_system():
