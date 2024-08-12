@@ -29,7 +29,7 @@ install: $(VENV_DIR)/bin/activate
 .PHONY: setup_db
 setup_db: install
 	@echo "Setting up the database..."
-	$(PYTHON) src/frameworks_drivers/db_setup/database_setup.py
+	$(PYTHON) src/frameworks_drivers/db/database_setup.py
 	@echo "Database setup complete."
 
 # 테스트 실행
