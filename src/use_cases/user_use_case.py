@@ -45,3 +45,6 @@ class UserUseCase:
             return '000001'
         new_user_code = str(int(last_user_code) + 1)
         return new_user_code.zfill(6)
+    
+    def signIn(self, username, password) -> User:
+        return self.user_repo.sign_in(username, password)

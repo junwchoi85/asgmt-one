@@ -58,3 +58,16 @@ class UserRepository:
         row = self.db_cursor.fetchone()
         # conn.close()
         return User(row[0], row[1], row[2], row[3]) if row else None
+
+    def sign_in(self, username: str, password: str) -> User:
+        """
+        Sign in
+        :param username: Username
+        :param password: Password
+        :return: True if successful, False otherwise
+        """
+        user = self.get_by_username(username)
+        if user is None:
+            return None
+        if user.password == password :
+            return user

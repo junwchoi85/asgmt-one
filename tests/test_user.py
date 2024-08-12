@@ -12,10 +12,10 @@ def test_create_user(user_repo):
     user_use_case = UserUseCase(user_repo)
     # Create a user
     user = User(
-        user_id=4, 
-        user_code='003', 
-        username='test', 
-        password='test'
+        user_id = None, 
+        user_code = None,
+        username = 'username@test.com', 
+        password = 'userpassword'
     )
     # Test
     result = user_use_case.createUser(user)
@@ -27,3 +27,29 @@ def test_create_user(user_repo):
     user_from_db = user_repo.get_by_username('test')
     assert user_from_db is not None
     assert user_from_db.username == 'test'
+
+def test_create_user_fail(user_repo):
+    #TODO: Implement
+    pass
+
+def test_sign_in(user_repo):
+    # Setup
+    user_use_case = UserUseCase(user_repo)
+    # Create a user
+    user = User(
+        user_id = None, 
+        user_code = None,
+        username = 'username@test.com', 
+        password = 'userpassword'
+    )
+    # Save the user
+    user_repo.save(user)
+    # Test
+    result = user_use_case.signIn(user.username, user.password)
+    # Verify
+    assert result is not None
+    assert result.username == user.username
+
+if __name__ == '__main__':
+    pytest.main(['-s', __file__])
+
