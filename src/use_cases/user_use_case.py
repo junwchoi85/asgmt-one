@@ -1,11 +1,13 @@
 import uuid
 
-from interface_adapters.repositories.user_repository import UserRepository
 from entities.user import User
+from interface_adapters.repositories.user_repository import UserRepository
+from frameworks_drivers.db_setup.database_setup import TransactionManager
 
 class UserUseCase:
-    def __init__(self, user_repo: UserRepository):
+    def __init__(self, user_repo: UserRepository, transaction_mngr: TransactionManager):
         self.user_repo = user_repo
+        self.transaction_mngr = transaction_mngr
 
     """
     Python doesn't support method overloading, 
@@ -22,6 +24,13 @@ class UserUseCase:
         return self.user_repo.save(user)
     Instead, we can use the arguments
     """
+    def sign_in(self, username, password):
+        with self.transaction_mngr.transaction_scope():
+            user = User(None, 
+                        self.generate_new_user_code(), 
+                        username, 
+                        password)
+            return self.user_repo.save(user)
 
     def createUser(self, user:User = None, **kwargs):
         print('createUser called')

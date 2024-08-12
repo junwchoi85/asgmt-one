@@ -1,5 +1,6 @@
 from frameworks_drivers.db_setup.database_setup import get_connection
 from entities.user import User
+from frameworks_drivers.db_setup.database_setup import DatabaseTransaction
 
 class UserRepository:
     def __init__(self, db_cursor):
@@ -11,21 +12,29 @@ class UserRepository:
         :param user: User object
         :return: None
         """
-        try:
-            # conn = get_connection()
-            # c = conn.cursor()
+        with DatabaseTransaction(self.db_cursor.connection) :
             self.db_cursor.execute(
                 '''
                 INSERT INTO user (user_id, user_code, username, password)
                 VALUES (?, ?, ?, ?)
                 ''',
                 (user.user_id, user.user_code, user.username, user.password))
-            self.db_cursor.connection.commit()
-            # conn.close()
-            return True
-        except Exception as e:
-            print(e)
-            return False
+            return self.db_cursor.lastrowid
+        # try:
+        #     # conn = get_connection()
+        #     # c = conn.cursor()
+        #     self.db_cursor.execute(
+        #         '''
+        #         INSERT INTO user (user_id, user_code, username, password)
+        #         VALUES (?, ?, ?, ?)
+        #         ''',
+        #         (user.user_id, user.user_code, user.username, user.password))
+        #     self.db_cursor.connection.commit()
+        #     # conn.close()
+        #     return True
+        # except Exception as e:
+        #     print(e)
+        #     return False
     
     def get_last_user_code(self) -> str:
         """
