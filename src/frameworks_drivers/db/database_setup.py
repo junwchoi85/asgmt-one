@@ -1,5 +1,5 @@
 import sqlite3
-from transaction_manager import TransactionManager
+from frameworks_drivers.db.transaction_manager import TransactionManager
 
 def setup_database():
     """

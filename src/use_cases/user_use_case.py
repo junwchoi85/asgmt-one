@@ -2,13 +2,20 @@ import uuid
 
 from entities.user import User
 from interface_adapters.repositories.user_repository import UserRepository
-from frameworks_drivers.db_setup.database_setup import TransactionManager
+from frameworks_drivers.db.database_setup import TransactionManager
 
 class UserUseCase:
     def __init__(self, user_repo: UserRepository, transaction_mngr: TransactionManager):
         self.user_repo = user_repo
         self.transaction_mngr = transaction_mngr
-
+    
+    def sign_up(self, username, password):
+        with self.transaction_mngr.transaction_scope():
+            user = User(None, 
+                        self.generate_new_user_code(), 
+                        username, 
+                        password)
+            return self.user_repo.create(user)
     """
     Python doesn't support method overloading, 
     so we can't have two methods with the same name but different parameters.
@@ -24,6 +31,7 @@ class UserUseCase:
         return self.user_repo.save(user)
     Instead, we can use the arguments
     """
+    
     def sign_in(self, username, password):
         with self.transaction_mngr.transaction_scope():
             user = User(None, 

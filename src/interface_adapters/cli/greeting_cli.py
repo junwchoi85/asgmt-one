@@ -2,11 +2,13 @@ import click
 
 from interface_adapters.cli.clear_screen_cli import clear_screen
 from interface_adapters.cli.sign_up_cli import signUp
-from interface_adapters.cli.sign_in_cli import signIn
+# from interface_adapters.cli.sign_in_cli import signIn
 
 @click.command()
-def greet():
+@click.pass_context
+def greet(ctx):
     """ Greet the user """
+    user_controller = ctx.obj['user_controller']
     clear_screen()
     click.echo(
         """
@@ -25,9 +27,9 @@ def greet():
         option = click.prompt('Invalid option. Please try again ', type=int)
     
     if option == 1:
-        signIn()
+        click.echo('Sign In')
     elif option == 2:
-        signUp()
+        signUp(obj={'user_controller': user_controller})
     elif option == 3:
         exit_system()
 

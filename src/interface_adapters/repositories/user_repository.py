@@ -1,25 +1,20 @@
-from frameworks_drivers.db_setup.database_setup import get_connection
 from entities.user import User
-from frameworks_drivers.db_setup.database_setup import DatabaseTransaction
 
 class UserRepository:
-    def __init__(self, db_cursor):
-        self.db_cursor = db_cursor
+    def __init__(self, connection):
+        self.connection = connection
 
-    def save(self, user: User) -> bool:
-        """
-        Save a user to the database
-        :param user: User object
-        :return: None
-        """
-        with DatabaseTransaction(self.db_cursor.connection) :
-            self.db_cursor.execute(
-                '''
-                INSERT INTO user (user_id, user_code, username, password)
-                VALUES (?, ?, ?, ?)
-                ''',
-                (user.user_id, user.user_code, user.username, user.password))
-            return self.db_cursor.lastrowid
+    def create(self, user: User) -> bool:
+        cursor = self.connection.cursor()
+        cursor.execute(
+            '''
+            INSERT INTO user (user_id, user_code, username, password)
+            VALUES (?, ?, ?, ?)
+            ''',
+            (user.user_id, user.user_code, user.username, user.password))
+        return cursor.lastrowid
+
+        # deprecated. transaction will be managed by the transaction manager
         # try:
         #     # conn = get_connection()
         #     # c = conn.cursor()
@@ -41,13 +36,12 @@ class UserRepository:
         Get the last user code
         :return: User code
         """
-        # conn = get_connection()
-        # c = conn.cursor()
-        self.db_cursor.execute(
+        cursor = self.connection.cursor()
+        cursor.execute(
             '''
             SELECT user_code FROM user ORDER BY user_id DESC LIMIT 1
             ''')
-        row = self.db_cursor.fetchone()
+        row = cursor.fetchone()
         # conn.close()
         return row[0] if row else None
     
@@ -59,12 +53,13 @@ class UserRepository:
         """
         # conn = get_connection()
         # c = conn.cursor()
-        self.db_cursor.execute(
+        cursor = self.connection.cursor()
+        cursor.execute(
             '''
             SELECT * FROM user WHERE username = ?
             ''',
             (username,))
-        row = self.db_cursor.fetchone()
+        row = cursor.fetchone()
         # conn.close()
         return User(row[0], row[1], row[2], row[3]) if row else None
 
