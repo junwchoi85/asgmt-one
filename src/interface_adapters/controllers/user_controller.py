@@ -6,3 +6,6 @@ class UserController:
     
     def sign_up(self, username, password):
         return self.user_use_case.sign_up(username, password)
+    
+    def sign_in(self, username, password):
+        return self.user_use_case.sign_in(username, password)

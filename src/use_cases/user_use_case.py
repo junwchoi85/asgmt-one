@@ -31,14 +31,6 @@ class UserUseCase:
         return self.user_repo.save(user)
     Instead, we can use the arguments
     """
-    
-    def sign_in(self, username, password):
-        with self.transaction_mngr.transaction_scope():
-            user = User(None, 
-                        self.generate_new_user_code(), 
-                        username, 
-                        password)
-            return self.user_repo.save(user)
 
     def createUser(self, user:User = None, **kwargs):
         print('createUser called')
@@ -63,5 +55,6 @@ class UserUseCase:
         new_user_code = str(int(last_user_code) + 1)
         return new_user_code.zfill(6)
     
-    def signIn(self, username, password) -> User:
-        return self.user_repo.sign_in(username, password)
+    def sign_in(self, username, password) -> User:
+        with self.transaction_mngr.transaction_scope():
+            return self.user_repo.sign_in(username, password)
