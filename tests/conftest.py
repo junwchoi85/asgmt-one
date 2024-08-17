@@ -1,6 +1,7 @@
 import pytest
 import sqlite3
-from frameworks_drivers.db_setup.database_setup import setup_database
+
+from frameworks_drivers.db.database_setup import setup_database
 
 @pytest.fixture(scope='session')
 def connection():

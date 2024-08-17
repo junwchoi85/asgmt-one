@@ -1,5 +1,6 @@
 import sqlite3
 from frameworks_drivers.db.transaction_manager import TransactionManager
+from random import choice, randint
 
 def setup_database():
     """
@@ -25,6 +26,7 @@ def setup_database():
             print('Tables dropped')
 
             # Create tables
+            # Customer
             c.execute('''
                 CREATE TABLE IF NOT EXISTS customer (
                     cst_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +41,8 @@ def setup_database():
                     UNIQUE (username)
                 );
             ''')
-
+            
+            # User
             c.execute('''
                 CREATE TABLE IF NOT EXISTS user (
                     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,6 +58,7 @@ def setup_database():
                 );
             ''')
 
+            # Role
             c.execute('''
                 CREATE TABLE IF NOT EXISTS role (
                     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,6 +71,7 @@ def setup_database():
                 );
             ''')
 
+            # User Role
             c.execute('''
                 CREATE TABLE IF NOT EXISTS user_role (
                     user_id INTEGER NOT NULL,
@@ -80,6 +85,7 @@ def setup_database():
                 );
             ''')
 
+            # Car
             c.execute('''
                 CREATE TABLE IF NOT EXISTS car (
                     car_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,6 +106,7 @@ def setup_database():
                 );
             ''')
 
+            # Car Detail
             c.execute('''
                 CREATE TABLE IF NOT EXISTS car_detail (
                     car_dtl_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -116,6 +123,7 @@ def setup_database():
                 );
             ''')
 
+            # Car Rental Terms
             c.execute('''
                 CREATE TABLE IF NOT EXISTS car_rental_terms (
                     car_rtr_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,6 +140,7 @@ def setup_database():
                 );
             ''')
 
+            # Booking
             c.execute('''
                 CREATE TABLE IF NOT EXISTS booking (
                     booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,6 +161,72 @@ def setup_database():
 
             print('Tables created')
 
+            # Insert data
+            # insert admin user
+            c.execute('''
+                INSERT INTO user (user_code, username, password, created_by)
+                VALUES ('sup-001', 'admin', 'admin', 'system')
+                ''')
+            # insert admin role
+            c.execute('''
+                INSERT INTO role (role_code, desc, created_by)
+                VALUES ('admin', 'Administrator', 'system')
+                ''')
+            # insert user role
+            c.execute('''
+                INSERT INTO user_role (user_id, role_id, created_by)
+                VALUES (1, 1, 'system')
+                ''')
+
+            # run web scraping to get car data
+            # insert car data
+            # Car data to be inserted
+            car_data = [
+                ('car-002', 'Toyota Corolla / Similar', '2019 - 2023', 5, 'Auto', 1, 2, '1800cc', '6.1L / 100km'),
+                ('car-003', 'Hyundai Elantra / Similar', '2018 - 2019', 5, 'Auto', 2, 3, '1800cc', '6.4L / 100km'),
+                ('car-004', 'Mitsubishi ASX 2WD / Similar', '2019 - 2022', 5, 'Auto', 2, 3, '2000cc', '7.6L / 100km'),
+                ('car-005', 'Nissan Xtrail AWD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                ('car-006', 'Nissan X Trail 2WD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                ('car-007', 'Hyundai Santa Fe AWD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc +', '10.6L / 100km'),
+                ('car-008', 'Hyundai iMax / Similar', '2019', 8, 'Auto', 3, 4, '2400cc', '9.5L / 100km'),
+                ('car-009', 'Toyota HiAce / Similar', '2016 - 2017', 12, 'Auto', 8, 8, '3000cc', '9.2L / 100km'),
+                ('car-010', 'Mitsubishi Triton 4WD', '2021 - 2022', 5, 'Auto', 3, 2, '2400cc', '9.8L / 100km'),
+                ('car-011', 'Hyundai Staria', '2020 - 2022', 2, 'Auto', '4.9 cubic meter cargo', 0, '2200cc', '8.2L / 100km')
+            ]
+
+            # Insert car data into the database
+            for car in car_data:
+                c.execute('''
+                    INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel, created_by)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'system')
+                    ''', car)
+            
+            # Car detail data to be inserted
+            car_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]  # Assuming these are the car IDs from the car table
+            colors = ['Red', 'Blue', 'Green', 'Black', 'White', 'Silver', 'Gray', 'Yellow', 'Orange', 'Purple']
+            statuses = ['Available', 'Sold', 'Maintenance', 'Reserved']
+
+            car_detail_data = []
+            car_detail_id = 1
+
+            for car_id in car_ids:
+                for _ in range(10):
+                    mileage = f"{randint(1000, 100000)} km"  # Random mileage between 1000 and 100000 km
+                    color = choice(colors)
+                    vin = f"VIN{randint(100000, 999999)}"  # Random VIN number
+                    status = choice(statuses)
+                    car_detail_data.append((car_detail_id, car_id, mileage, color, vin, status))
+                    car_detail_id += 1
+
+            # Insert car detail data into the database
+            for car_detail in car_detail_data:
+                c.execute('''
+                    INSERT INTO car_detail (car_dtl_id, car_id, mileage, color, vin, status, created_by)
+                    VALUES (?, ?, ?, ?, ?, ?, 'system')
+                    ''', car_detail)
+
+
+            print('Data inserted')
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
