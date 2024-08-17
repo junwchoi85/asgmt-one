@@ -1,8 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
-from interface_adapters.repositories.user_repository import UserRepository
-from use_cases.user_use_case import UserUseCase
-from entities.user import User
+from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 
 @click.command()
 @click.pass_context
@@ -22,3 +20,8 @@ def signIn(ctx, username, password):
     
     if result:
         click.echo('Sign in successful')
+        customer_main_menu(obj = {'user': result})
+    else:
+        #TODO : Should go back to the main menu?
+        click.echo('Invalid Username or Password')
+        exit()

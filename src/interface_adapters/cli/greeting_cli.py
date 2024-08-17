@@ -15,15 +15,17 @@ def greet(ctx):
         ============== Car Rental System ==============
          Hello, welcome to the Car Rental System!      
          Please choose an option from the menu below:  
-                                                       
-         1. Sign In                                    
-         2. Sign Up                                    
-         3. Exit                                       
+        
+         1. Sign In
+         2. Sign Up
+         3. Exit
+         4. Help
+         5. Admin
         ===============================================
         """)
 
     option = click.prompt('Input number ', type=int)
-    while(option < 1 or option > 3):
+    while(option < 1 or option > 5):
         option = click.prompt('Invalid option. Please try again ', type=int)
     
     if option == 1:
@@ -32,6 +34,11 @@ def greet(ctx):
         signUp(obj={'user_controller': user_controller})
     elif option == 3:
         exit_system()
+    elif option == 4:
+        click.echo("help")
+    elif option == 5:
+        signIn(obj={'user_controller': user_controller})
+    
 
 @click.command()
 def exit_system():

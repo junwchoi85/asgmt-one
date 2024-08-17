@@ -9,13 +9,6 @@ class UserUseCase:
         self.user_repo = user_repo
         self.transaction_mngr = transaction_mngr
     
-    def sign_up(self, username, password):
-        with self.transaction_mngr.transaction_scope():
-            user = User(None, 
-                        self.generate_new_user_code(), 
-                        username, 
-                        password)
-            return self.user_repo.create(user)
     """
     Python doesn't support method overloading, 
     so we can't have two methods with the same name but different parameters.
@@ -31,30 +24,14 @@ class UserUseCase:
         return self.user_repo.save(user)
     Instead, we can use the arguments
     """
-
-    def createUser(self, user:User = None, **kwargs):
-        print('createUser called')
-
-        if user is None:
-            username = kwargs.get('username')
-            password = kwargs.get('password')
-            if not username or not password:
-                raise ValueError("username과 password는 필수입니다.")
-            
-            # user_id = str(uuid.uuid4())
-            new_user_code = self.generate_new_user_code()
-            user = User(None, new_user_code, username, password)
-        
-        return self.user_repo.save(user)
-
-    def generate_new_user_code(self):
-        print('generate_new_user_code called')
-        last_user_code = self.user_repo.get_last_user_code()
-        if last_user_code is None:
-            return '000001'
-        new_user_code = str(int(last_user_code) + 1)
-        return new_user_code.zfill(6)
     
     def sign_in(self, username, password) -> User:
         with self.transaction_mngr.transaction_scope():
-            return self.user_repo.sign_in(username, password)
+            user = self.user_repo.find_by_username(username)
+            if not user:
+                raise ValueError('User not found')
+            
+            if user.password != password:
+                raise ValueError('Incorrect password')
+            
+            return user
