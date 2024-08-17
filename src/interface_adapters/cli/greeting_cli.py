@@ -8,6 +8,7 @@ from interface_adapters.cli.sign_in_cli import signIn
 @click.pass_context
 def greet(ctx):
     """ Greet the user """
+    # customer_controller = ctx.obj['customer_controller']
     user_controller = ctx.obj['user_controller']
     clear_screen()
     click.echo(
@@ -29,9 +30,11 @@ def greet(ctx):
         option = click.prompt('Invalid option. Please try again ', type=int)
     
     if option == 1:
-        signIn(obj={'user_controller': user_controller})
+        # signIn(obj={'customer_controller': customer_controller})
+        pass
     elif option == 2:
-        signUp(obj={'user_controller': user_controller})
+        # signUp(obj={'customer_controller': customer_controller})
+        pass
     elif option == 3:
         exit_system()
     elif option == 4:

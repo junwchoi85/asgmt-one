@@ -1,8 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
-# from interface_adapters.repositories.user_repository import UserRepository
-# from use_cases.user_use_case import UserUseCase
-# from entities.user import User
+from interface_adapters.controllers.customer_controller import CustomerController
 
 @click.command()
 @click.pass_context
@@ -23,12 +21,12 @@ def signUp(ctx, username, password):
     # user_repository = UserRepository(db_cursor)
     # create_user_use_case = UserUseCase(user_repository)
     # Input validation
-    user_controller = ctx.obj['user_controller']
+    customer_controller = ctx.obj['customer_controller']
     if not username or not password:
         click.echo('Username and password are required')
         return
 
-    result = user_controller.sign_up(username=username, password=password)
+    result = customer_controller.sign_up(username=username, password=password)
 
     click.echo('User created successfully') if result else click.echo('User creation failed')
     

@@ -48,3 +48,8 @@ clean:
 	find . -type d -name '__pycache__' -delete
 	find . -type f -name '*.db' -delete
 	@echo "Cleanup complete."
+
+# 가상환경을 활성화하고 main.py를 실행하는 규칙
+.PHONY: run
+run:
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) src/main.py

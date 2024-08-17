@@ -20,7 +20,7 @@ def signIn(ctx, username, password):
     
     if result:
         click.echo('Sign in successful')
-        customer_main_menu(obj = {'user': result})
+        customer_main_menu(obj = {'user': result['user']})
     else:
         #TODO : Should go back to the main menu?
         click.echo('Invalid Username or Password')

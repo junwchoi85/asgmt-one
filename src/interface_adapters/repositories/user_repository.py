@@ -35,6 +35,5 @@ class UserRepository(RepositoryInterface):
         row = cursor.fetchone()
         if row:
             user_id, user_code, username, password, created_at, created_by, updated_at, updated_by  = row
-            return User(user_id=user_id, user_code=user_code , username=username, password=password
-                        , created_at=created_at, created_by=created_by, updated_at=updated_at, updated_by=updated_by)
+            return User(user_id=user_id, user_code=user_code , username=username, password=password)
         return None
