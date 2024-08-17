@@ -1,13 +1,14 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 from entities.base_entity import BaseEntity
 
 @dataclass
-class User(BaseEntity):
+class Customer(BaseEntity):
     """
-    Represents a user entity.
+    Represents a customer entity.
     """
-    user_id: int
-    user_code: str
+    cst_id: int
+    cst_code: str
     username: str
     password: str
