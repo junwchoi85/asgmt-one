@@ -29,7 +29,7 @@ install: $(VENV_DIR)/bin/activate
 .PHONY: setup_db
 setup_db: install
 	@echo "Setting up the database..."
-	$(PYTHON) src/frameworks_drivers/db/database_setup.py
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) src/frameworks_drivers/db/database_setup.py
 	@echo "Database setup complete."
 
 # 테스트 실행
@@ -46,4 +46,5 @@ clean:
 	rm -rf $(VENV_DIR)
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
+	find . -type f -name '*.db' -delete
 	@echo "Cleanup complete."
