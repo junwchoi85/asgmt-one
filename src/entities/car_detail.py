@@ -6,8 +6,9 @@ class CarDetail(BaseEntity) :
     """
     Represents a car detail entity.
     """
-    car_detail_id: int
+    car_dtl_id: int
     car_id: int
+    mileage: str
     color: str
-    price: float
-    available: bool
+    vin: str
+    status: str
