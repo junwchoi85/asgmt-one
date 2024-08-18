@@ -2,13 +2,12 @@ import sqlite3
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from random import choice, randint
 
-def setup_database():
+
+def setup_database(transaction_manager: TransactionManager):
     """
     Function to setup the database
     """
-    connection = sqlite3.connect('mse800.db')
     print('Database connection established')
-    transaction_manager = TransactionManager(connection)
 
     try:
         with transaction_manager as conn:
@@ -41,7 +40,7 @@ def setup_database():
                     UNIQUE (username)
                 );
             ''')
-            
+
             # User
             c.execute('''
                 CREATE TABLE IF NOT EXISTS user (
@@ -182,16 +181,26 @@ def setup_database():
             # insert car data
             # Car data to be inserted
             car_data = [
-                ('car-002', 'Toyota Corolla / Similar', '2019 - 2023', 5, 'Auto', 1, 2, '1800cc', '6.1L / 100km'),
-                ('car-003', 'Hyundai Elantra / Similar', '2018 - 2019', 5, 'Auto', 2, 3, '1800cc', '6.4L / 100km'),
-                ('car-004', 'Mitsubishi ASX 2WD / Similar', '2019 - 2022', 5, 'Auto', 2, 3, '2000cc', '7.6L / 100km'),
-                ('car-005', 'Nissan Xtrail AWD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
-                ('car-006', 'Nissan X Trail 2WD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
-                ('car-007', 'Hyundai Santa Fe AWD / Similar', '2019 - 2022', 5, 'Auto', 4, 3, '2500cc +', '10.6L / 100km'),
-                ('car-008', 'Hyundai iMax / Similar', '2019', 8, 'Auto', 3, 4, '2400cc', '9.5L / 100km'),
-                ('car-009', 'Toyota HiAce / Similar', '2016 - 2017', 12, 'Auto', 8, 8, '3000cc', '9.2L / 100km'),
-                ('car-010', 'Mitsubishi Triton 4WD', '2021 - 2022', 5, 'Auto', 3, 2, '2400cc', '9.8L / 100km'),
-                ('car-011', 'Hyundai Staria', '2020 - 2022', 2, 'Auto', '4.9 cubic meter cargo', 0, '2200cc', '8.2L / 100km')
+                ('car-002', 'Toyota Corolla / Similar', '2019 - 2023',
+                 5, 'Auto', 1, 2, '1800cc', '6.1L / 100km'),
+                ('car-003', 'Hyundai Elantra / Similar', '2018 - 2019',
+                 5, 'Auto', 2, 3, '1800cc', '6.4L / 100km'),
+                ('car-004', 'Mitsubishi ASX 2WD / Similar', '2019 - 2022',
+                 5, 'Auto', 2, 3, '2000cc', '7.6L / 100km'),
+                ('car-005', 'Nissan Xtrail AWD / Similar', '2019 - 2022',
+                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                ('car-006', 'Nissan X Trail 2WD / Similar', '2019 - 2022',
+                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                ('car-007', 'Hyundai Santa Fe AWD / Similar', '2019 - 2022',
+                 5, 'Auto', 4, 3, '2500cc +', '10.6L / 100km'),
+                ('car-008', 'Hyundai iMax / Similar', '2019',
+                 8, 'Auto', 3, 4, '2400cc', '9.5L / 100km'),
+                ('car-009', 'Toyota HiAce / Similar', '2016 - 2017',
+                 12, 'Auto', 8, 8, '3000cc', '9.2L / 100km'),
+                ('car-010', 'Mitsubishi Triton 4WD', '2021 - 2022',
+                 5, 'Auto', 3, 2, '2400cc', '9.8L / 100km'),
+                ('car-011', 'Hyundai Staria', '2020 - 2022', 2, 'Auto',
+                 '4.9 cubic meter cargo', 0, '2200cc', '8.2L / 100km')
             ]
 
             # Insert car data into the database
@@ -200,10 +209,12 @@ def setup_database():
                     INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel, created_by)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'system')
                     ''', car)
-            
+
             # Car detail data to be inserted
-            car_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]  # Assuming these are the car IDs from the car table
-            colors = ['Red', 'Blue', 'Green', 'Black', 'White', 'Silver', 'Gray', 'Yellow', 'Orange', 'Purple']
+            # Assuming these are the car IDs from the car table
+            car_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            colors = ['Red', 'Blue', 'Green', 'Black', 'White',
+                      'Silver', 'Gray', 'Yellow', 'Orange', 'Purple']
             statuses = ['Available', 'Sold', 'Maintenance', 'Reserved']
 
             car_detail_data = []
@@ -211,11 +222,13 @@ def setup_database():
 
             for car_id in car_ids:
                 for _ in range(10):
-                    mileage = f"{randint(1000, 100000)} km"  # Random mileage between 1000 and 100000 km
+                    # Random mileage between 1000 and 100000 km
+                    mileage = f"{randint(1000, 100000)} km"
                     color = choice(colors)
                     vin = f"VIN{randint(100000, 999999)}"  # Random VIN number
                     status = choice(statuses)
-                    car_detail_data.append((car_detail_id, car_id, mileage, color, vin, status))
+                    car_detail_data.append(
+                        (car_detail_id, car_id, mileage, color, vin, status))
                     car_detail_id += 1
 
             # Insert car detail data into the database
@@ -225,13 +238,14 @@ def setup_database():
                     VALUES (?, ?, ?, ?, ?, ?, 'system')
                     ''', car_detail)
 
-
             print('Data inserted')
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
-        connection.close()
+        # transaction_manager.close_connection()
         print('Database connection closed')
 
+
 if __name__ == "__main__":
-    setup_database()
+    transaction_manager = TransactionManager('mse800.db')
+    setup_database(transaction_manager)

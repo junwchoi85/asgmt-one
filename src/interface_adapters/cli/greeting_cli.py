@@ -4,6 +4,7 @@ from interface_adapters.cli.clear_screen_cli import clear_screen
 from interface_adapters.cli.sign_up_cli import signUp
 from interface_adapters.cli.sign_in_cli import signIn
 
+
 @click.command()
 @click.pass_context
 def greet(ctx):
@@ -26,14 +27,14 @@ def greet(ctx):
         """)
 
     option = click.prompt('Input number ', type=int)
-    while(option < 1 or option > 5):
+    while (option < 1 or option > 5):
         option = click.prompt('Invalid option. Please try again ', type=int)
-    
+
     if option == 1:
-        # signIn(obj={'customer_controller': customer_controller})
+        signIn(obj={'customer_controller': customer_controller})
         pass
     elif option == 2:
-        # signUp(obj={'customer_controller': customer_controller})
+        signUp(obj={'customer_controller': customer_controller})
         pass
     elif option == 3:
         exit_system()
@@ -41,7 +42,7 @@ def greet(ctx):
         click.echo("help")
     elif option == 5:
         signIn(obj={'user_controller': user_controller})
-    
+
 
 @click.command()
 def exit_system():

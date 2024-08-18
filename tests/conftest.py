@@ -1,31 +1,40 @@
 import pytest
-import sqlite3
 
 from frameworks_drivers.db.database_setup import setup_database
+from frameworks_drivers.db.transaction_manager import TransactionManager
 
-@pytest.fixture(scope='session')
-def connection():
-    # 세션 범위의 인메모리 SQLite 데이터베이스 생성
-    conn = sqlite3.connect(':memory:')
-    yield conn
-    conn.close()
 
-@pytest.fixture(scope='session')
-def setup_database_fixture(connection):
-    # 세션 범위에서 테이블 생성
-    setup_database(connection)
-    yield
-    cursor = connection.cursor()
-    cursor.execute('DROP TABLE IF EXISTS user;')
-    cursor.execute('DROP TABLE IF EXISTS role;')
-    cursor.execute('DROP TABLE IF EXISTS user_role;')
-    cursor.execute('DROP TABLE IF EXISTS car;')
-    cursor.execute('DROP TABLE IF EXISTS booking;')
-    connection.commit()
+@pytest.fixture(scope='module')
+def transaction_manager():
+    """
+    Fixture for creating a TransactionManager instance.
 
-@pytest.fixture(scope='function')
-def db_cursor(connection, setup_database_fixture):
-    # 각 테스트 함수마다 새로운 커서 생성
-    cursor = connection.cursor()
-    yield cursor
-    cursor.close()
+    This fixture creates a TransactionManager instance for the test module.
+    The connection is closed after all tests in the module have run.
+
+    Returns:
+        TransactionManager: An instance of the TransactionManager.
+    """
+    db_path = 'test_database.db'  # 테스트용 데이터베이스 경로
+    transaction_manager = TransactionManager(db_path)
+    setup_database(transaction_manager)  # 데이터베이스 설정
+    yield transaction_manager     # 테스트에 사용할 TransactionManager 인스턴스를 반환
+    transaction_manager.close_connection()    # 테스트가 끝난 후 연결을 닫음
+
+
+@pytest.fixture
+def db_connection(transaction_manager):
+    """
+    Fixture for providing a database connection.
+
+    This fixture provides a database connection for each test.
+    The connection is managed by the TransactionManager.
+
+    Args:
+        transaction_manager (TransactionManager): The TransactionManager instance.
+
+    Returns:
+        connection: The database connection object.
+    """
+    with transaction_manager as connection:
+        yield connection

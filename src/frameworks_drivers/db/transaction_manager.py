@@ -1,15 +1,16 @@
 import sqlite3
 
+
 class TransactionManager:
-    def __init__(self, connection):
+    def __init__(self, db_path: str):
         """
         Constructor for the transaction manager.
 
         Args:
-            connection: The connection object to the database
+            db_path (str): The path to the database file.
         """
-        self.connection = connection
-    
+        self.connection = sqlite3.connect(db_path)
+
     def transaction_scope(self):
         """
         Returns the connection object for the transaction scope.
@@ -17,7 +18,7 @@ class TransactionManager:
         :return: The connection object for the transaction scope.
         """
         return self.connection
-    
+
     def __enter__(self):
         """
         Enter method for the transaction manager.
@@ -55,7 +56,7 @@ class TransactionManager:
             None
         """
         self.connection.close()
-    
+
     def run_ddl(self, ddl):
         """
         Run a DDL statement.
@@ -69,7 +70,7 @@ class TransactionManager:
             None
         """
         self.connection.execute(ddl)
-    
+
     def run_dml(self, dml, values):
         """
         Run a DML statement.

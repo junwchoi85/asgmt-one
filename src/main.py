@@ -11,10 +11,10 @@ from interface_adapters.controllers.user_controller import UserController
 
 DB_FILE = 'mse800.db'
 
+
 def create_user_controller(transaction_manager: TransactionManager):
-    connection = transaction_manager.transaction_scope()
     # User
-    user_repository = UserRepository(connection)
+    user_repository = UserRepository(transaction_manager)
     user_use_case = UserUseCase(user_repository, transaction_manager)
     user_controller = UserController(user_use_case)
 
@@ -29,16 +29,18 @@ def create_user_controller(transaction_manager: TransactionManager):
 
 #     return customer_controller
 
+
 def create_vihecle_controller(transaction_manager: TransactionManager):
     pass
+
 
 def rental_controller(transaction_manager: TransactionManager):
     pass
 
+
 def main():
     # Create database connection
-    connection = sqlite3.connect(DB_FILE)
-    transaction_manager = TransactionManager(connection)
+    transaction_manager = TransactionManager(DB_FILE)
 
     # Create controllers
     user_controller = create_user_controller(transaction_manager)
@@ -50,6 +52,7 @@ def main():
     greeting_cli.greet(obj={'user_controller': user_controller})
     # greeting_cli.greet(obj={'user_controller': user_controller,
     #                         'customer_controller': customer_controller})
+
 
 if __name__ == '__main__':
     main()

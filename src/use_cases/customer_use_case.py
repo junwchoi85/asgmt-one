@@ -9,7 +9,7 @@ class CustomerUseCase:
         self.customer_repository = customer_repository
         self.transaction_mngr = transaction_mngr
 
-    def register_customer(self, customer_data: dict) -> int:
+    def sign_up(self, customer_data: dict) -> int:
         with self.transaction_mngr.transaction_scope():
             customer = Customer(
                 cst_id = None,
@@ -18,3 +18,7 @@ class CustomerUseCase:
                 password=customer_data['password']
             )
             return self.customer_repository.create(customer)
+    
+    def find_user_by_username(self, username: str) -> Customer:
+        with self.transaction_mngr.transaction_scope():
+            return self.customer_repository.find_by_username(username)

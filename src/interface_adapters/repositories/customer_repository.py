@@ -34,7 +34,7 @@ class CustomerRepository(RepositoryInterface) :
             code = int(code[1]) + 1
             return code
     
-    def get_by_username(self, username: str) -> Customer:
+    def find_by_username(self, username: str) -> Customer:
         """
         Get a customer by username
         :param username: Username
