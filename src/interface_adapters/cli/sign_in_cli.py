@@ -1,6 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
-from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
+from interface_adapters.cli.user_main_menu_cli import user_main_menu
 
 
 @click.command()
@@ -25,7 +25,7 @@ def signIn(ctx, username, password):
 
     if result:
         click.echo('Sign in successful')
-        customer_main_menu(obj={'user': result['user']})
+        user_main_menu(obj={'username': username})
     else:
         # TODO : Should go back to the main menu?
         click.echo('Invalid Username or Password')
