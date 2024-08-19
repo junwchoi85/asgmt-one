@@ -1,16 +1,12 @@
 import click
 
+
 @click.command()
 @click.pass_context
 def customer_main_menu(ctx):
     # ctx로 유저 정보를 받아온다.
 
-    user = ctx.obj['user']
-    username = None
-    if user is not None:
-        username = user.username
-    else:
-        exit()
+    username = ctx.obj['username']
 
     """ User Main Menu """
     click.echo(f'Hello {username}, welcome to the MSE800 Car Rental System!')
@@ -20,8 +16,8 @@ def customer_main_menu(ctx):
     click.echo('3. View my bookings')
     click.echo('4. Sign out')
     choice = click.prompt('\nChoose an option', type=int)
-    
-    while(choice < 1 or choice > 4):
+
+    while (choice < 1 or choice > 4):
         choice = click.prompt('Invalid option. Please try again ', type=int)
     if choice == 1:
         click.echo('View available cars')
@@ -31,4 +27,3 @@ def customer_main_menu(ctx):
         click.echo('View my bookings')
     elif choice == 4:
         click.echo('Sign out')
-        

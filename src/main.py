@@ -20,14 +20,14 @@ def create_user_controller(transaction_manager: TransactionManager):
 
     return user_controller
 
-# def create_customer_controller(transaction_manager: TransactionManager):
-#     connection = transaction_manager.transaction_scope()
-#     # Customer
-#     customer_repository = CustomerRepository(connection)
-#     customer_use_case = CustomerUseCase(customer_repository, transaction_manager)
-#     customer_controller = CustomerController(customer_use_case)
 
-#     return customer_controller
+def create_customer_controller(transaction_manager: TransactionManager):
+    customer_repository = CustomerRepository(transaction_manager)
+    customer_use_case = CustomerUseCase(
+        customer_repository, transaction_manager)
+    customer_controller = CustomerController(customer_use_case)
+
+    return customer_controller
 
 
 def create_vihecle_controller(transaction_manager: TransactionManager):
@@ -44,14 +44,13 @@ def main():
 
     # Create controllers
     user_controller = create_user_controller(transaction_manager)
-    # customer_controller = create_customer_controller(transaction_manager)
+    customer_controller = create_customer_controller(transaction_manager)
     create_vihecle_controller(transaction_manager)
     rental_controller(transaction_manager)
 
     # The central hub for starting the application.
-    greeting_cli.greet(obj={'user_controller': user_controller})
-    # greeting_cli.greet(obj={'user_controller': user_controller,
-    #                         'customer_controller': customer_controller})
+    greeting_cli.greet(obj={'user_controller': user_controller,
+                            'customer_controller': customer_controller})
 
 
 if __name__ == '__main__':
