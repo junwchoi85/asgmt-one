@@ -1,12 +1,20 @@
 
+from typing import List
+from entities.car import Car
 from entities.customer import Customer
 from frameworks_drivers.db.transaction_manager import TransactionManager
+from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
 
 
 class CustomerUseCase:
-    def __init__(self, customer_repository: CustomerRepository, transaction_mngr: TransactionManager):
+    def __init__(self,
+                 customer_repository: CustomerRepository,
+                 car_repository: CarRepository,
+                 transaction_mngr: TransactionManager):
+
         self.customer_repository = customer_repository
+        self.car_repository = car_repository
         self.transaction_mngr = transaction_mngr
 
     def sign_up(self, customer_data: dict) -> int:
@@ -40,3 +48,26 @@ class CustomerUseCase:
             code = code.split('-')
             code[1] = str(int(code[1]) + 1).zfill(4)
             return '-'.join(code)
+
+    # Car section. TODO: Consider moving this to a separate use case
+    def get_car_list(self) -> List[Car]:
+        """
+        Get a list of cars
+        :return: List of cars
+        """
+        with self.transaction_mngr.transaction_scope():
+            return self.car_repository.get_car_list()
+
+    def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
+        """
+        Get a list of cars with pagination
+        :param page: Page number
+        :param page_size: Number of items per page
+        :return: List of cars
+        """
+        if page < 1:
+            page = 1
+        if page_size < 1:
+            page_size = 10
+        with self.transaction_mngr.transaction_scope():
+            return self.car_repository.get_car_list_paged(page, page_size)

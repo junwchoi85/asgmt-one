@@ -13,6 +13,7 @@ def greet(ctx):
     """ Greet the user """
     customer_controller = ctx.obj['customer_controller']
     user_controller = ctx.obj['user_controller']
+
     clear_screen()
     click.echo(
         """

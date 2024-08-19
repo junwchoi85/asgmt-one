@@ -25,7 +25,8 @@ def customer_sign_in(ctx, username, password):
 
     if result:
         click.echo('Sign in successful')
-        customer_main_menu(obj={'username': username})
+        customer_main_menu(obj={'username': username,
+                                'customer_controller': customer_controller})
     else:
         # TODO : Should go back to the main menu?
         click.echo('Invalid Username or Password')

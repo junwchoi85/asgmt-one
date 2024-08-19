@@ -36,7 +36,7 @@ setup_db: install
 .PHONY: test
 test: install
 	@echo "Running tests..."
-	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pytest
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pytest -s
 	@echo "Tests complete."
 
 # 가상 환경 제거

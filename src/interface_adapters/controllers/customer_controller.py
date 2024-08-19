@@ -1,4 +1,6 @@
 
+from typing import List
+from entities.car import Car
 from use_cases.customer_use_case import CustomerUseCase
 
 
@@ -20,3 +22,6 @@ class CustomerController:
 
         result = self.customer_register_use_case.sign_in(req)
         return result
+
+    def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
+        return self.customer_register_use_case.get_car_list_paged(page, page_size)

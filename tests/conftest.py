@@ -1,8 +1,19 @@
+import logging
 import os
 import pytest
 
 from frameworks_drivers.db.database_setup import setup_database
 from frameworks_drivers.db.transaction_manager import TransactionManager
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+@pytest.fixture
+def test_logger():
+    return logger
 
 
 @pytest.fixture(scope='module')
