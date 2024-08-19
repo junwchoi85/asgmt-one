@@ -14,15 +14,17 @@ def test_book_car(customer_repo, car_repo, booking_repo, transaction_manager, te
                                         car_repo,
                                         booking_repo,
                                         transaction_manager)
+
+    new_username = 'test_booking'
+    new_password = 'password'
+
     # Create a customer
     req_create_customer = {
-        'username': 'cut_sign_up',
-        'password': 'password'
+        'username': new_username,
+        'password': new_password
     }
     rslt_create_customer = customer_use_case.sign_up(req_create_customer)
     # get the customer
-    customer = customer_use_case.find_user_by_username(
-        req_create_customer['username'])
     # test_logger.debug(customer.cst_id)
     # Select a Car
     cars = customer_use_case.get_car_list()
@@ -37,15 +39,12 @@ def test_book_car(customer_repo, car_repo, booking_repo, transaction_manager, te
     one_month_from_today_formatted = one_month_from_today.strftime('%Y-%m-%d')
     # Book the car
     req_book_car = {
-        'cst_id': customer.cst_id,
-        'car_id': car_selected.car_id,
-        'car_dtl_id': 1,
-        'start_date': today_formatted,
-        'end_date': one_month_from_today_formatted,
-        'total_fee': 100,
-        'status': 'BOOKED'
+        'username': new_username,
+        'car_code': car_selected.car_code,
+        'start_date': '2021-01-01',
+        'end_date': '2021-01-31',
     }
     # Test
-    rewult = customer_use_case.book_car(req_book_car)
+    rewult = customer_use_case.make_a_booking(req_book_car)
     # Verify
     assert rewult is not None
