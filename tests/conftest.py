@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from frameworks_drivers.db.database_setup import setup_database
@@ -20,6 +21,8 @@ def transaction_manager():
     setup_database(transaction_manager)  # 데이터베이스 설정
     yield transaction_manager     # 테스트에 사용할 TransactionManager 인스턴스를 반환
     transaction_manager.close_connection()    # 테스트가 끝난 후 연결을 닫음
+    if os.path.exists(db_path):
+        os.remove(db_path)  # 테스트가 끝난 후 데이터베이스 파일 삭제
 
 
 @pytest.fixture

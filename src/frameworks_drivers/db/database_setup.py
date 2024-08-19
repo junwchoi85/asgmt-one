@@ -35,7 +35,7 @@ def setup_database(transaction_manager: TransactionManager):
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     created_by VARCHAR(45) NOT NULL DEFAULT 'system',
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    updated_by VARCHAR(45) NOT NULL,
+                    updated_by VARCHAR(45) NULL,
                     UNIQUE (cst_code),
                     UNIQUE (username)
                 );

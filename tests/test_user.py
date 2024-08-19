@@ -31,4 +31,4 @@ def test_sign_in(user_repo, transaction_manager):
     result = user_use_case.sign_in(req)
     # Verify
     assert result is not None
-    assert result.username == new_user.username
+    assert result.username == req['username']

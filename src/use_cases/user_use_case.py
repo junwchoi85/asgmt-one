@@ -40,7 +40,7 @@ class UserUseCase:
 
             return user
 
-    def sign_up(self, req: dict) -> User:
+    def sign_up(self, req: dict) -> int:
         username = req.get('username')
         password = req.get('password')
 
@@ -51,8 +51,7 @@ class UserUseCase:
 
             new_user_code = self.generate_user_code()
             user = User(None, new_user_code, username, password)
-            self.user_repo.create(user)
-            return user
+            return self.user_repo.create(user)
 
     def generate_user_code(self) -> str:
         """
