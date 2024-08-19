@@ -4,11 +4,6 @@ from use_cases.user_use_case import UserUseCase
 from entities.user import User
 
 
-@pytest.fixture
-def user_repo(transaction_manager):
-    return UserRepository(transaction_manager)
-
-
 def test_create_user(user_repo):
     pass
 

@@ -20,13 +20,30 @@ class CarRepository(RepositoryInterface):
     def delete(self, id: int) -> bool:
         pass
 
-    def get_car_list(self) -> list:
+    def get_car_list(self) -> list[Car]:
         cursor = self.connection.cursor()
         cursor.execute(
             '''
             SELECT * FROM car
             ''')
-        return cursor.fetchall()
+        rows = cursor.fetchall()
+        # print(rows)
+        car_list = []
+        for row in rows:
+            car = Car(
+                car_id=row[0],
+                car_code=row[1],
+                name=row[2],
+                year=row[3],
+                passenger=row[4],
+                transmission=row[5],
+                luggage_large=row[6],
+                luggage_small=row[7],
+                engine=row[8],
+                fuel=row[9]
+            )
+            car_list.append(car)
+        return car_list
 
     def get_car_list_paged(self, page: int, page_size: int) -> list[Car]:
         offset = (page - 1) * page_size

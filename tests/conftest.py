@@ -4,16 +4,12 @@ import pytest
 
 from frameworks_drivers.db.database_setup import setup_database
 from frameworks_drivers.db.transaction_manager import TransactionManager
+from interface_adapters.repositories.booking_repository import BookingRepository
+from interface_adapters.repositories.car_repository import CarRepository
+from interface_adapters.repositories.customer_repository import CustomerRepository
+from interface_adapters.repositories.user_repository import UserRepository
 
 # 로깅 설정
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-
-@pytest.fixture
-def test_logger():
-    return logger
 
 
 @pytest.fixture(scope='module')
@@ -52,3 +48,37 @@ def db_connection(transaction_manager):
     """
     with transaction_manager as connection:
         yield connection
+
+# Repo
+
+
+@pytest.fixture
+def user_repo(transaction_manager):
+    return UserRepository(transaction_manager)
+
+
+@pytest.fixture
+def customer_repo(transaction_manager):
+    return CustomerRepository(transaction_manager)
+
+
+@pytest.fixture
+def car_repo(transaction_manager):
+    return CarRepository(transaction_manager)
+
+
+@pytest.fixture
+def booking_repo(transaction_manager):
+    return BookingRepository(transaction_manager)
+
+
+@pytest.fixture(scope='session')
+def test_logger():
+    logger = logging.getLogger('test_logger')
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger

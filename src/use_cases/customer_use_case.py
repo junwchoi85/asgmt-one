@@ -3,6 +3,7 @@ from typing import List
 from entities.car import Car
 from entities.customer import Customer
 from frameworks_drivers.db.transaction_manager import TransactionManager
+from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
 
@@ -11,11 +12,13 @@ class CustomerUseCase:
     def __init__(self,
                  customer_repository: CustomerRepository,
                  car_repository: CarRepository,
+                 booking_repo: BookingRepository,
                  transaction_mngr: TransactionManager):
 
-        self.customer_repository = customer_repository
-        self.car_repository = car_repository
+        self.customer_repo = customer_repository
+        self.car_repo = car_repository
         self.transaction_mngr = transaction_mngr
+        self.booking_repository = booking_repo
 
     def sign_up(self, customer_data: dict) -> int:
         with self.transaction_mngr.transaction_scope():
@@ -25,17 +28,17 @@ class CustomerUseCase:
                 username=customer_data['username'],
                 password=customer_data['password']
             )
-            return self.customer_repository.create(customer)
+            return self.customer_repo.create(customer)
 
     def find_user_by_username(self, username: str) -> Customer:
         with self.transaction_mngr.transaction_scope():
-            return self.customer_repository.find_by_username(username)
+            return self.customer_repo.find_by_username(username)
 
     def sign_in(self, customer_data: dict) -> Customer:
         username = customer_data['username']
         password = customer_data['password']
         with self.transaction_mngr.transaction_scope():
-            customer = self.customer_repository.find_by_username(username)
+            customer = self.customer_repo.find_by_username(username)
             if not customer:
                 raise ValueError('User not found')
             if customer.password != password:
@@ -44,7 +47,7 @@ class CustomerUseCase:
 
     def generate_customer_code(self) -> str:
         with self.transaction_mngr.transaction_scope():
-            code = self.customer_repository.fetch_latest_customer_code()
+            code = self.customer_repo.fetch_latest_customer_code()
             code = code.split('-')
             code[1] = str(int(code[1]) + 1).zfill(4)
             return '-'.join(code)
@@ -56,7 +59,7 @@ class CustomerUseCase:
         :return: List of cars
         """
         with self.transaction_mngr.transaction_scope():
-            return self.car_repository.get_car_list()
+            return self.car_repo.get_car_list()
 
     def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
         """
@@ -70,4 +73,14 @@ class CustomerUseCase:
         if page_size < 1:
             page_size = 10
         with self.transaction_mngr.transaction_scope():
-            return self.car_repository.get_car_list_paged(page, page_size)
+            return self.car_repo.get_car_list_paged(page, page_size)
+
+    # Booking section. TODO: Consider moving this to a separate use case
+    def book_car(self, req: dict) -> int:
+        """
+        Book a car
+        :param req: Booking information
+        :return: Booking ID
+        """
+        with self.transaction_mngr.transaction_scope():
+            return self.booking_repository.book_car(req)

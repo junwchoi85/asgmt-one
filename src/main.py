@@ -17,18 +17,18 @@ DB_FILE = 'mse800.db'
 
 def create_user_controller(transaction_manager: TransactionManager):
     # User
-    user_repository = UserRepository(transaction_manager)
-    user_use_case = UserUseCase(user_repository, transaction_manager)
+    user_repo = UserRepository(transaction_manager)
+    user_use_case = UserUseCase(user_repo, transaction_manager)
     user_controller = UserController(user_use_case)
 
     return user_controller
 
 
 def create_customer_controller(transaction_manager: TransactionManager):
-    customer_repository = CustomerRepository(transaction_manager)
-    car_repository = CarRepository(transaction_manager)
+    customer_repo = CustomerRepository(transaction_manager)
+    car_repo = CarRepository(transaction_manager)
     customer_use_case = CustomerUseCase(
-        customer_repository, car_repository, transaction_manager)
+        customer_repo, car_repo, transaction_manager)
     customer_controller = CustomerController(customer_use_case)
 
     return customer_controller
@@ -47,7 +47,7 @@ def rental_controller(transaction_manager: TransactionManager):
 
 
 def main():
-    # Create database connection
+    # Create database connectionㄱ
     transaction_manager = TransactionManager(DB_FILE)
 
     # Create controllers
