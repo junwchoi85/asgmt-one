@@ -76,11 +76,28 @@ class CustomerUseCase:
             return self.car_repo.get_car_list_paged(page, page_size)
 
     # Booking section. TODO: Consider moving this to a separate use case
-    def book_car(self, req: dict) -> int:
+    def make_a_booking(self, req: dict) -> int:
         """
         Book a car
         :param req: Booking information
         :return: Booking ID
         """
+        username = req['username']
+        car_code = req['car_code']
+        total_fee = 100
+        status = 'reserved'
         with self.transaction_mngr.transaction_scope():
-            return self.booking_repository.book_car(req)
+            # select user
+            customer = self.customer_repo.find_by_username(username)
+            car = self.car_repo.find_by_car_code(car_code)
+
+            booking_req = {
+                'cst_id': customer.cst_id,
+                'car_dtl_id': car.car_id,
+                'start_date': req['start_date'],
+                'end_date': req['end_date'],
+                'total_fee': total_fee,
+                'status': status
+            }
+
+            return self.booking_repository.book_car(booking_req)

@@ -20,6 +20,29 @@ class CarRepository(RepositoryInterface):
     def delete(self, id: int) -> bool:
         pass
 
+    def find_by_car_code(self, car_code: str) -> Optional[Car]:
+        cursor = self.connection.cursor()
+        cursor.execute(
+            '''
+            SELECT * FROM car
+            WHERE car_code = ?
+            ''', (car_code,))
+        row = cursor.fetchone()
+        if row is None:
+            return None
+        return Car(
+            car_id=row[0],
+            car_code=row[1],
+            name=row[2],
+            year=row[3],
+            passenger=row[4],
+            transmission=row[5],
+            luggage_large=row[6],
+            luggage_small=row[7],
+            engine=row[8],
+            fuel=row[9]
+        )
+
     def get_car_list(self) -> list[Car]:
         cursor = self.connection.cursor()
         cursor.execute(
@@ -57,7 +80,7 @@ class CarRepository(RepositoryInterface):
         car_list = []
         for row in rows:
             car = Car(
-                car_id=row[0],
+                car_id=None,        # hide the car_id
                 car_code=row[1],
                 name=row[2],
                 year=row[3],
