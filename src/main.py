@@ -4,6 +4,7 @@ from interface_adapters.cli import greeting_cli
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.controllers.car_controller import CarController
 from interface_adapters.controllers.customer_controller import CustomerController
+from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
 from interface_adapters.repositories.user_repository import UserRepository
@@ -27,8 +28,9 @@ def create_user_controller(transaction_manager: TransactionManager):
 def create_customer_controller(transaction_manager: TransactionManager):
     customer_repo = CustomerRepository(transaction_manager)
     car_repo = CarRepository(transaction_manager)
+    booking_repo = BookingRepository(transaction_manager)
     customer_use_case = CustomerUseCase(
-        customer_repo, car_repo, transaction_manager)
+        customer_repo, car_repo, booking_repo, transaction_manager)
     customer_controller = CustomerController(customer_use_case)
 
     return customer_controller
