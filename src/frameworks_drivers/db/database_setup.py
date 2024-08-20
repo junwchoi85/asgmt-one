@@ -23,7 +23,6 @@ def setup_database(transaction_manager: TransactionManager):
             c.execute('DROP TABLE IF EXISTS car_rental_terms;')
             c.execute('DROP TABLE IF EXISTS booking;')
             c.execute('DROP TABLE IF EXISTS promotion;')
-            c.execute('DROP TABLE IF EXISTS car_promotion;')
 
             print('Tables dropped')
 
@@ -240,31 +239,6 @@ def setup_database(transaction_manager: TransactionManager):
             ''')
             print('promotion Table created')
 
-            # Create car_promotion table
-            c.execute('''
-                CREATE TABLE IF NOT EXISTS car_promotion (
-                    cpr_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    car_rtr_id INT NULL,
-                    prm_id INT NULL,
-                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    created_by VARCHAR(7) NOT NULL DEFAULT 'system',
-                    updated_at TIMESTAMP NULL,
-                    updated_by VARCHAR(7) NULL,
-                    FOREIGN KEY (prm_id) REFERENCES promotion (prm_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-                    FOREIGN KEY (car_rtr_id) REFERENCES car_rental_terms (car_rtr_id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                );
-            ''')
-            # Create trigger to update updated_at column
-            c.execute('''
-                CREATE TRIGGER IF NOT EXISTS update_car_promotion_updated_at
-                AFTER UPDATE ON car_promotion
-                FOR EACH ROW
-                BEGIN
-                    UPDATE car_promotion SET updated_at = CURRENT_TIMESTAMP WHERE cpr_id = OLD.cpr_id;
-                END;
-            ''')
-            print('car_promotion Table created')
-
             # Booking
             c.execute('''
                 CREATE TABLE IF NOT EXISTS booking (
@@ -351,7 +325,7 @@ def setup_database(transaction_manager: TransactionManager):
             car_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
             colors = ['Red', 'Blue', 'Green', 'Black', 'White',
                       'Silver', 'Gray', 'Yellow', 'Orange', 'Purple']
-            statuses = ['Available', 'Sold', 'Maintenance', 'Reserved']
+            statuses = ['Available', 'Maintenance', 'Reserved']
 
             car_detail_data = []
             car_detail_id = 1
@@ -374,6 +348,26 @@ def setup_database(transaction_manager: TransactionManager):
                     VALUES (?, ?, ?, ?, ?, ?, 'system')
                     ''', car_detail)
 
+            # Car rental terms data to be inserted
+            car_rental_terms_data = [
+                (1, 1, 5, 41.99),
+                (2, 1, 5, 43.96),
+                (3, 1, 5, 42.96),
+                (4, 1, 5, 61.02),
+                (5, 1, 5, 42.96),
+                (6, 1, 5, 70.64),
+                (7, 1, 5, 138.26),
+                (8, 1, 5, 143.54),
+                (9, 1, 5, 52.64),
+                (10, 1, 5, 57.96)
+            ]
+
+            # Insert car rental terms data into the database
+            for car_rental_terms in car_rental_terms_data:
+                c.execute('''
+                    INSERT INTO car_rental_terms (car_id, min_rent_period, max_rent_period, price_per_day, created_by)
+                    VALUES (?, ?, ?, ?, 'system')
+                    ''', car_rental_terms)
             print('Data inserted')
     except Exception as e:
         print(f"An error occurred: {e}")
