@@ -1,20 +1,29 @@
 from typing import List
 
 import os
-import urllib.request 
+import urllib.request
 import bs4 as bs
-
-from entities.car import Car
 
 # URL of the webpage to scrape
 URL = "https://www.apexrentals.co.nz/cars"
 
-def run_web_scraper() -> List[Car] :
+
+def scrap_car_reservation_info():
+    reservation_info_url = "https://www.apexrentals.co.nz/reservations/vehicles"
+    source = urllib.request.urlopen(reservation_info_url).read()
+    soup = bs.BeautifulSoup(source, 'lxml')
+
+    # content_div = soup.find('div', id='Content_Content_upFleet')
+
+    print(soup)
+
+
+def scrap_car_list():
     """
     Runs the web scraper to get the list of cars available for rent.
     """
     source = urllib.request.urlopen(URL).read()
-    soup = bs.BeautifulSoup(source,'lxml')
+    soup = bs.BeautifulSoup(source, 'lxml')
 
     # id가 Content_Content_upFleet인 div 요소를 찾습니다.
     content_div = soup.find('div', id='Content_Content_upFleet')
@@ -49,29 +58,35 @@ def run_web_scraper() -> List[Car] :
                 # print("class가 'dvCarHeadingSub'인 div 요소를 찾을 수 없습니다.")
             car_imgs = car_div.find_all('img', class_='imgIcon')
             for car_img in car_imgs:
-                if(car_img['alt'] == 'Year'):
+                if (car_img['alt'] == 'Year'):
                     # print(f'year :{car_img.next_sibling.strip()}')
                     year = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Adult'):
+                if (car_img['alt'] == 'Adult'):
                     # print(f'Passenger :{car_img.next_sibling.strip()}')
                     passenger = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Transmission'):
+                if (car_img['alt'] == 'Transmission'):
                     # print(f'Transmission :{car_img.next_sibling.strip()}')
                     transmission = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Luggage Large'):
+                if (car_img['alt'] == 'Luggage Large'):
                     # print(f'Luggage Large :{car_img.next_sibling.strip()}')
                     luggage_large = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Luggage Small'):
+                if (car_img['alt'] == 'Luggage Small'):
                     # print(f'Luggage Small :{car_img.next_sibling.strip()}')
                     luggage_small = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Engine'):
+                if (car_img['alt'] == 'Engine'):
                     # print(f'Engine :{car_img.next_sibling.strip()}')
                     engine = car_img.next_sibling.strip()
-                if(car_img['alt'] == 'Fuel'):
+                if (car_img['alt'] == 'Fuel'):
                     # print(f'Fuel :{car_img.next_sibling.strip()}')
                     fuel = car_img.next_sibling.strip()
-            car = Car(car_name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel)
+            car = Car(car_name, year, passenger, transmission,
+                      luggage_large, luggage_small, engine, fuel)
             cars.append(car)
     else:
         print("id가 'Content_Content_upFleet'인 div 요소를 찾을 수 없습니다.")
     return cars
+
+
+if __name__ == '__main__':
+    # scrap_car_list()
+    scrap_car_reservation_info()

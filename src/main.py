@@ -39,7 +39,7 @@ def create_customer_controller(transaction_manager: TransactionManager):
     return customer_controller
 
 
-def create_vihecle_controller(transaction_manager: TransactionManager):
+def create_car_controller(transaction_manager: TransactionManager):
     car_repository = CarRepository(transaction_manager)
     car_use_case = CarUseCase(car_repository, transaction_manager)
     car_controller = CarController(car_use_case)
@@ -58,13 +58,13 @@ def main():
     # Create controllers
     user_controller = create_user_controller(transaction_manager)
     customer_controller = create_customer_controller(transaction_manager)
-    vihecle_controller = create_vihecle_controller(transaction_manager)
+    car_controller = create_car_controller(transaction_manager)
     rental_controller(transaction_manager)
 
     # The central hub for starting the application.
     greeting_cli.greet(obj={'user_controller': user_controller,
                             'customer_controller': customer_controller,
-                            'vihecle_controller': vihecle_controller})
+                            'car_controller': car_controller})
 
 
 if __name__ == '__main__':
