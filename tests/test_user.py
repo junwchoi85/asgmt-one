@@ -14,9 +14,11 @@ def test_create_user_fail(user_repo):
 
 def test_sign_in(user_repo,
                  booking_repo,
+                 car_repo,
                  transaction_manager):
     # Setup
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
 
     req = {
         'username': 'test',

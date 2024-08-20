@@ -90,10 +90,14 @@ class CustomerUseCase:
             # select user
             customer = self.customer_repo.find_by_username(username)
             car = self.car_repo.find_by_car_code(car_code)
-
+            select_car_detail_req = {
+                'car_id': car.car_id
+            }
+            car_detail = self.car_repo.select_car_detail(select_car_detail_req)
+            car_dtl_id = car_detail.car_dtl_id
             booking_req = {
                 'cst_id': customer.cst_id,
-                'car_dtl_id': car.car_id,
+                'car_dtl_id': car_dtl_id,
                 'start_date': req['start_date'],
                 'end_date': req['end_date'],
                 'total_fee': total_fee,

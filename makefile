@@ -39,6 +39,13 @@ test: install
 	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pytest -s
 	@echo "Tests complete."
 
+# 테스트 실행
+.PHONY: test_debug
+test_debug: install
+	@echo "Running tests in debug mode..."
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pytest --pdb
+	@echo "Tests complete."
+
 # 가상 환경 제거
 .PHONY: clean
 clean:

@@ -20,7 +20,9 @@ def create_user_controller(transaction_manager: TransactionManager):
     # User
     user_repo = UserRepository(transaction_manager)
     booking_repo = BookingRepository(transaction_manager)
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    car_repo = CarRepository(transaction_manager)
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
     user_controller = UserController(user_use_case)
 
     return user_controller

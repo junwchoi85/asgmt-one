@@ -3,17 +3,19 @@ import uuid
 from entities.booking import Booking
 from entities.user import User
 from interface_adapters.repositories.booking_repository import BookingRepository
+from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.user_repository import UserRepository
 from frameworks_drivers.db.database_setup import TransactionManager
 
 
 class UserUseCase:
     def __init__(self,
-                 user_repo: UserRepository, booking_repo: BookingRepository,
+                 user_repo: UserRepository, booking_repo: BookingRepository, car_repo: CarRepository,
                  transaction_mngr: TransactionManager):
 
         self.user_repo = user_repo
         self.booking_repo = booking_repo
+        self.car_repo = car_repo
         self.transaction_mngr = transaction_mngr
 
     """

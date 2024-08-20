@@ -1,5 +1,6 @@
 from typing import Optional
 from entities.car import Car
+from entities.car_detail import CarDetail
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.repositories.repository_interface import RepositoryInterface
 
@@ -93,3 +94,28 @@ class CarRepository(RepositoryInterface):
             )
             car_list.append(car)
         return car_list
+
+    # car detail section
+    # TODO : Consider moving this to a separate repository
+    def select_car_detail(self, req: dict) -> CarDetail:
+        car_id = req['car_id']
+
+        cursor = self.connection.cursor()
+        cursor.execute(
+            '''
+            SELECT * FROM car_detail
+            WHERE car_id = ?
+            AND status = 'Available'
+            ORDER BY RANDOM()
+            LIMIT 1
+            ''', (car_id,))
+        row = cursor.fetchone()
+        car_detail = CarDetail(
+            car_dtl_id=row[0],
+            car_id=row[1],
+            mileage=row[2],
+            color=row[3],
+            vin=row[4],
+            status=row[5]
+        )
+        return car_detail

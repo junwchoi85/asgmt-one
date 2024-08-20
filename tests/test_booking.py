@@ -20,7 +20,9 @@ def test_book_car(customer_repo, car_repo, booking_repo, transaction_manager, te
                                         car_repo,
                                         booking_repo,
                                         transaction_manager)
-
+    """
+    Book a car as a customer
+    """
     username = 'test_booking'
 
     # Create a customer
@@ -68,7 +70,8 @@ def test_get_booking_info(user_repo,
                                         car_repo,
                                         booking_repo,
                                         transaction_manager)
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
 
     username = 'test_get_booking_info'
     # Setup
@@ -89,8 +92,10 @@ def test_get_booking_info(user_repo,
         'start_date': date_utils.get_today_formatted(),
         'end_date': date_utils.get_one_month_from_today_formatted(),
     }
+    res_book_car = customer_use_case.make_a_booking(req_book_car)
 
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
 
     # Test
     req = {
@@ -118,7 +123,8 @@ def test_confirm_booking(user_repo,
                                         car_repo,
                                         booking_repo,
                                         transaction_manager)
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
 
     username = 'test_confirm_booking'
     # Setup
@@ -139,10 +145,12 @@ def test_confirm_booking(user_repo,
         'start_date': date_utils.get_today_formatted(),
         'end_date': date_utils.get_one_month_from_today_formatted(),
     }
-
-    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
+    res_book_car = customer_use_case.make_a_booking(req_book_car)
 
     # Test
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
+
     req = {
         'status': 'reserved'
     }
@@ -154,6 +162,7 @@ def test_confirm_booking(user_repo,
         'booking_id': booking_list[0].booking_id,
         'status': 'confirmed'
     }
+
     user_use_case.confirm_booking(req_confirm_booking)
 
     # Get the booking info
