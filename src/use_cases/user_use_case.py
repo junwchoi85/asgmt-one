@@ -1,13 +1,19 @@
 import uuid
 
+from entities.booking import Booking
 from entities.user import User
+from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.user_repository import UserRepository
 from frameworks_drivers.db.database_setup import TransactionManager
 
 
 class UserUseCase:
-    def __init__(self, user_repo: UserRepository, transaction_mngr: TransactionManager):
+    def __init__(self,
+                 user_repo: UserRepository, booking_repo: BookingRepository,
+                 transaction_mngr: TransactionManager):
+
         self.user_repo = user_repo
+        self.booking_repo = booking_repo
         self.transaction_mngr = transaction_mngr
 
     """
@@ -62,3 +68,30 @@ class UserUseCase:
             code = code.split('-')
             code[1] = str(int(code[1]) + 1).zfill(4)
             return '-'.join(code)
+
+    def get_booking_list(self, req: dict) -> list[Booking]:
+        """
+        Get a list of bookings
+        :return: List of bookings
+        """
+
+        with self.transaction_mngr.transaction_scope():
+            return self.booking_repo.get_booking_list(req)
+
+    def confirm_booking(self, req: dict):
+        """
+        Confirm a booking
+        :param req: Request
+        :return: None
+        """
+        with self.transaction_mngr.transaction_scope():
+            self.booking_repo.update_booking_status(req)
+
+    def reject_booking(self, req: dict):
+        """
+        Reject a booking
+        :param req: Request
+        :return: None
+        """
+        with self.transaction_mngr.transaction_scope():
+            self.booking_repo.update_booking_status(req)

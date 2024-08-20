@@ -19,7 +19,8 @@ DB_FILE = 'mse800.db'
 def create_user_controller(transaction_manager: TransactionManager):
     # User
     user_repo = UserRepository(transaction_manager)
-    user_use_case = UserUseCase(user_repo, transaction_manager)
+    booking_repo = BookingRepository(transaction_manager)
+    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
     user_controller = UserController(user_use_case)
 
     return user_controller

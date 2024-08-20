@@ -1,5 +1,7 @@
 import click
 
+from interface_adapters.cli.manage_booking_cli import manage_booking
+
 
 @click.command()
 @click.pass_context
@@ -22,7 +24,7 @@ def user_main_menu(ctx):
     if choice == 1:
         click.echo('Manage Car Information')
     elif choice == 2:
-        click.echo('Manage booking')
+        ctx.invoke(manage_booking)
     elif choice == 3:
         click.echo('Manage Customer')
     elif choice == 4:

@@ -25,7 +25,9 @@ def signIn(ctx, username, password):
 
     if result:
         click.echo('Sign in successful')
-        user_main_menu(obj={'username': username})
+        ctx.obj['username'] = username
+        ctx.invoke(user_main_menu)
+        # user_main_menu(obj={'username': username})
     else:
         # TODO : Should go back to the main menu?
         click.echo('Invalid Username or Password')

@@ -49,7 +49,7 @@ def db_connection(transaction_manager):
     with transaction_manager as connection:
         yield connection
 
-# Repo
+# Repository fixtures
 
 
 @pytest.fixture
@@ -72,6 +72,7 @@ def booking_repo(transaction_manager):
     return BookingRepository(transaction_manager)
 
 
+# Logger fixture
 @pytest.fixture(scope='session')
 def test_logger():
     logger = logging.getLogger('test_logger')

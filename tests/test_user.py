@@ -12,9 +12,11 @@ def test_create_user_fail(user_repo):
     pass
 
 
-def test_sign_in(user_repo, transaction_manager):
+def test_sign_in(user_repo,
+                 booking_repo,
+                 transaction_manager):
     # Setup
-    user_use_case = UserUseCase(user_repo, transaction_manager)
+    user_use_case = UserUseCase(user_repo, booking_repo, transaction_manager)
 
     req = {
         'username': 'test',

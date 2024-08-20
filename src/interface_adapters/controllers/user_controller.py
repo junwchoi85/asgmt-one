@@ -1,3 +1,4 @@
+from entities.booking import Booking
 from use_cases.user_use_case import UserUseCase
 
 
@@ -14,3 +15,21 @@ class UserController:
             return {"status": "success", "user": user}
         else:
             return {"status": "failure", "message": "Invalid credentials"}
+
+    def get_booking_list(self, req: dict) -> list[Booking]:
+        booking_list = self.user_use_case.get_booking_list(req)
+        return {"status": "success", "booking_list": booking_list}
+
+    def confirm_booking(self, req: dict):
+        result = self.user_use_case.confirm_booking(req)
+        if result:
+            return {"status": "success"}
+        else:
+            return {"status": "failure", "message": "Booking not found"}
+
+    def reject_booking(self, req: dict):
+        result = self.user_use_case.reject_booking(req)
+        if result:
+            return {"status": "success"}
+        else:
+            return {"status": "failure", "message": "Booking not found"}
