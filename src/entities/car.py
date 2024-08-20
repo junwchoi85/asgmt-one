@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 from entities.base_entity import BaseEntity
 
 
-@dataclass
 class Car(BaseEntity):
     """
     Represents a car entity.

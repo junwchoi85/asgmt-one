@@ -24,7 +24,7 @@ def setup_database(transaction_manager: TransactionManager):
             c.execute('DROP TABLE IF EXISTS booking;')
             c.execute('DROP TABLE IF EXISTS promotion;')
 
-            print('Tables dropped')
+            print('*Tables dropped\n')
 
             # Create tables
             # Customer
@@ -42,6 +42,12 @@ def setup_database(transaction_manager: TransactionManager):
                     UNIQUE (username)
                 );
             ''')
+            # Create indexes
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS user_code_UNIQUE ON customer (cst_code)')
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS username_UNIQUE ON customer (username)')
+
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_customer_updated_at
@@ -51,7 +57,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE customer SET updated_at = CURRENT_TIMESTAMP WHERE cst_id = OLD.cst_id;
                 END;
             ''')
-            print('customer Table created')
+            print('*** customer Table created')
 
             # User
             c.execute('''
@@ -68,6 +74,11 @@ def setup_database(transaction_manager: TransactionManager):
                     UNIQUE (username)
                 );
             ''')
+            # Create indexes
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS user_code_UNIQUE ON user (user_code)')
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS username_UNIQUE ON user (username)')
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_user_updated_at
@@ -77,7 +88,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE user SET updated_at = CURRENT_TIMESTAMP WHERE user_id = OLD.user_id;
                 END;
             ''')
-            print('user Table created')
+            print('*** user Table created')
 
             # Role
             c.execute('''
@@ -88,9 +99,13 @@ def setup_database(transaction_manager: TransactionManager):
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     created_by VARCHAR(7) NOT NULL DEFAULT 'system',
                     updated_at TIMESTAMP NULL,
-                    updated_by VARCHAR(7) NULL
+                    updated_by VARCHAR(7) NULL,
+                    UNIQUE (role_code)
                 );
             ''')
+            # Create indexes for role table
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS role_code_UNIQUE ON role (role_code)')
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_role_updated_at
@@ -100,13 +115,12 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE role SET updated_at = CURRENT_TIMESTAMP WHERE role_id = OLD.role_id;
                 END;
             ''')
-            print('role Table created')
+            print('*** role Table created')
 
             # user_role
             c.execute('''
                 CREATE TABLE IF NOT EXISTS user_role (
                     uro_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    uro_code VARCHAR(45) NOT NULL,
                     desc TEXT NULL,
                     user_id INT NULL,
                     role_id INT NULL,
@@ -114,11 +128,16 @@ def setup_database(transaction_manager: TransactionManager):
                     created_by VARCHAR(7) NOT NULL DEFAULT 'system',
                     updated_at TIMESTAMP NULL,
                     updated_by VARCHAR(7) NULL,
-                    UNIQUE (uro_code),
                     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
                     FOREIGN KEY (role_id) REFERENCES role (role_id) ON DELETE NO ACTION ON UPDATE NO ACTION
                 );
             ''')
+            # Create indexes for user_role table
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS uro_role_idx ON user_role (role_id)')
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS uro_user_idx ON user_role (user_id)')
+
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_user_role_updated_at
@@ -128,7 +147,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE user_role SET updated_at = CURRENT_TIMESTAMP WHERE uro_id = OLD.uro_id;
                 END;
             ''')
-            print('user_role Table created')
+            print('*** user_role Table created')
 
             # Car
             c.execute('''
@@ -150,6 +169,9 @@ def setup_database(transaction_manager: TransactionManager):
                     UNIQUE (car_code)
                 );
             ''')
+            # Create indexes
+            c.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS car_code_UNIQUE ON car (car_code)')
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_car_updated_at
@@ -159,7 +181,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE car SET updated_at = CURRENT_TIMESTAMP WHERE car_id = OLD.car_id;
                 END;
             ''')
-            print('car Table created')
+            print('*** car Table created')
 
             # Car Detail
             c.execute('''
@@ -177,6 +199,9 @@ def setup_database(transaction_manager: TransactionManager):
                     FOREIGN KEY (car_id) REFERENCES car (car_id) ON DELETE NO ACTION ON UPDATE NO ACTION
                 );
             ''')
+            # Create indexes for car_detail table
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS car_id_idx ON car_detail (car_id)')
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_car_detail_updated_at
@@ -186,9 +211,9 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE car_detail SET updated_at = CURRENT_TIMESTAMP WHERE car_dtl_id = OLD.car_dtl_id;
                 END;
             ''')
-            print('car_detail Table created')
+            print('*** car_detail Table created')
 
-            # Car Rental Terms
+            # Create car_rental_terms table
             c.execute('''
                 CREATE TABLE IF NOT EXISTS car_rental_terms (
                     car_rtr_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -203,7 +228,12 @@ def setup_database(transaction_manager: TransactionManager):
                     FOREIGN KEY (car_id) REFERENCES car (car_code) ON DELETE NO ACTION ON UPDATE NO ACTION
                 );
             ''')
-            # Create trigger to update updated_at column
+
+            # Create indexes for car_rental_terms table
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS foriegnKey_car_id_idx ON car_rental_terms (car_id)')
+
+            # Create trigger to update updated_at column for car_rental_terms table
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_car_rental_terms_updated_at
                 AFTER UPDATE ON car_rental_terms
@@ -212,7 +242,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE car_rental_terms SET updated_at = CURRENT_TIMESTAMP WHERE car_rtr_id = OLD.car_rtr_id;
                 END;
             ''')
-            print('car_rental_terms Table created')
+            print('*** car_rental_terms Table created')
 
             # Create promotion table
             c.execute('''
@@ -220,8 +250,8 @@ def setup_database(transaction_manager: TransactionManager):
                     prm_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     desc TEXT NULL,
                     discount_rate DECIMAL(2,2) NULL,
-                    dt_start VARCHAR(45) NULL,
-                    dt_end VARCHAR(45) NULL,
+                    dt_start DATETIME NULL,
+                    dt_end DATETIME NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     created_by VARCHAR(7) NOT NULL DEFAULT 'system',
                     updated_at TIMESTAMP NULL,
@@ -237,7 +267,39 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE promotion SET updated_at = CURRENT_TIMESTAMP WHERE prm_id = OLD.prm_id;
                 END;
             ''')
-            print('promotion Table created')
+            print('*** promotion Table created')
+
+            # Create car_promotion table
+            c.execute('''
+                CREATE TABLE IF NOT EXISTS car_promotion (
+                    cpr_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    car_rtr_id INTEGER NULL,
+                    prm_id INTEGER NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    created_by VARCHAR(7) NOT NULL DEFAULT 'system',
+                    updated_at TIMESTAMP NULL,
+                    updated_by VARCHAR(7) NULL,
+                    FOREIGN KEY (prm_id) REFERENCES promotion (prm_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                    FOREIGN KEY (car_rtr_id) REFERENCES car_rental_terms (car_rtr_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+                );
+            ''')
+
+            # Create indexes
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS cpr_promotion_idx ON car_promotion (prm_id)')
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS cpr_rtr_idx ON car_promotion (car_rtr_id)')
+
+            # Create trigger to update updated_at column
+            c.execute('''
+                CREATE TRIGGER IF NOT EXISTS update_car_promotion_updated_at
+                AFTER UPDATE ON car_promotion
+                FOR EACH ROW
+                BEGIN
+                    UPDATE car_promotion SET updated_at = CURRENT_TIMESTAMP WHERE cpr_id = OLD.cpr_id;
+                END;
+            ''')
+            print('*** car_promotion Table created')
 
             # Booking
             c.execute('''
@@ -257,6 +319,10 @@ def setup_database(transaction_manager: TransactionManager):
                     FOREIGN KEY (car_dtl_id) REFERENCES car_detail (car_dtl_id) ON DELETE NO ACTION ON UPDATE NO ACTION
                 );
             ''')
+            # 인덱스 생성
+            c.execute('CREATE INDEX IF NOT EXISTS cst_id_idx ON booking (cst_id)')
+            c.execute(
+                'CREATE INDEX IF NOT EXISTS car_dtl_id_idx ON booking (car_dtl_id)')
             # Create trigger to update updated_at column
             c.execute('''
                 CREATE TRIGGER IF NOT EXISTS update_booking_updated_at
@@ -266,7 +332,7 @@ def setup_database(transaction_manager: TransactionManager):
                     UPDATE booking SET updated_at = CURRENT_TIMESTAMP WHERE booking_id = OLD.booking_id;
                 END;
             ''')
-            print('booking Table created')
+            print('*** booking Table created')
 
             print('Tables created')
 
@@ -283,8 +349,8 @@ def setup_database(transaction_manager: TransactionManager):
                 ''')
             # insert user role
             c.execute('''
-                INSERT INTO user_role (uro_code, desc, user_id, role_id, created_by)
-                VALUES ('uro-001', 'Admin role for admin user', 1, 1, 'system')
+                INSERT INTO user_role (desc, user_id, role_id, created_by)
+                VALUES ('Admin role for admin user', 1, 1, 'system')
                 ''')
 
             # run web scraping to get car data
