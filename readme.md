@@ -19,7 +19,17 @@ Guidelines on how to use your project and any relevant examples.
 
 ## Contributing
 
-Information on how others can contribute to your project.
+We welcome contributions to this project! To contribute, please follow these steps:
+
+1. Fork the repository and clone it to your local machine.
+2. Create a new branch for your contribution.
+3. Make your changes and commit them with descriptive messages.
+4. Push your branch to your forked repository.
+5. Open a pull request to merge your changes into the main repository.
+
+Please ensure that your contributions adhere to our [code of conduct](link-to-code-of-conduct) and are in line with the project's goals and guidelines.
+
+Thank you for contributing to our project!
 
 ## License
 
