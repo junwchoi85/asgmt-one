@@ -1,35 +1,46 @@
-# Project Setup
-```bash
-make install
-````
+# Project Name
 
+A brief description of your project goes here.
 
+## Table of Contents
 
-# pytest 사용을 위한 가상환경 설정
-- https://docs.pytest.org/en/7.1.x/getting-started.html
-## 가상환경 설정
-```bash
-python3 -m venv /Users/jc/projects/MSE800/asgmt one
-source /Users/jc/projects/MSE800/asgmt one
-```
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-## pytest 설치
-```bash
-pip install pytest
-```
+## Installation
 
-## 가상환경 비활성화
-```bash
-deactivate
-```
+Instructions on how to install and set up your project.
 
-# Web Scraper to fetch data from a car rental services
+## Usage
 
-## Library used
-### requests
-- https://pypi.org/project/requests/
-- HTTP library for pyton
+Guidelines on how to use your project and any relevant examples.
 
-### beautifulsoup
-- https://pypi.org/project/beautifulsoup4/
-- library for web scraping
+## Contributing
+
+Information on how others can contribute to your project.
+
+## License
+
+MIT License
+
+Copyright (c) 2019-2024 Othneil Drew
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
