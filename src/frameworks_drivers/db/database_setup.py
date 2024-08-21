@@ -340,7 +340,7 @@ def setup_database(transaction_manager: TransactionManager):
             # insert admin user
             c.execute('''
                 INSERT INTO user (user_code, username, password, created_by)
-                VALUES ('sup-001', 'admin', 'admin', 'system')
+                VALUES ('sup-001', 'admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'system')
                 ''')
             # insert admin role
             c.execute('''

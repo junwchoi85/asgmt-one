@@ -1,4 +1,3 @@
-
 from typing import List
 from entities.car import Car
 from entities.customer import Customer
@@ -6,6 +5,7 @@ from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
+from utils.encryption_util import encrypt_password
 
 
 class CustomerUseCase:
@@ -20,13 +20,16 @@ class CustomerUseCase:
         self.transaction_mngr = transaction_mngr
         self.booking_repository = booking_repo
 
-    def sign_up(self, customer_data: dict) -> int:
+    def sign_up(self, req: dict) -> int:
+        # Encrypt password
+        encrypted_password = encrypt_password(req['password'])
+
         with self.transaction_mngr.transaction_scope():
             customer = Customer(
                 cst_id=None,
                 cst_code=self.generate_customer_code(),
-                username=customer_data['username'],
-                password=customer_data['password']
+                username=req['username'],
+                password=encrypted_password
             )
             return self.customer_repo.create(customer)
 
@@ -36,12 +39,12 @@ class CustomerUseCase:
 
     def sign_in(self, customer_data: dict) -> Customer:
         username = customer_data['username']
-        password = customer_data['password']
+        encrypted_password = encrypt_password(customer_data['password'])
         with self.transaction_mngr.transaction_scope():
             customer = self.customer_repo.find_by_username(username)
             if not customer:
                 raise ValueError('User not found')
-            if customer.password != password:
+            if customer.password != encrypted_password:
                 raise ValueError('Incorrect password')
             return customer
 
@@ -87,9 +90,9 @@ class CustomerUseCase:
         total_fee = 100
         status = 'reserved'
         with self.transaction_mngr.transaction_scope():
-            # select user
             customer = self.customer_repo.find_by_username(username)
             car = self.car_repo.find_by_car_code(car_code)
+
             select_car_detail_req = {
                 'car_id': car.car_id
             }

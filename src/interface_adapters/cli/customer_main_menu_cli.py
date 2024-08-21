@@ -10,7 +10,7 @@ def customer_main_menu(ctx):
 
     username = ctx.obj['username']
     click.echo(
-        f'Hello {username}, welcome to the MSE800 Car Rental System!')
+        f'\nHello {username}, welcome to the MSE800 Car Rental System!')
 
     """ User Main Menu """
 

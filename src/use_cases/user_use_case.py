@@ -6,6 +6,7 @@ from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.user_repository import UserRepository
 from frameworks_drivers.db.database_setup import TransactionManager
+from utils.encryption_util import encrypt_password
 
 
 class UserUseCase:
@@ -36,21 +37,20 @@ class UserUseCase:
 
     def sign_in(self, req: dict) -> User:
         username = req.get('username')
-        password = req.get('password')
-
+        password_encrypted = encrypt_password(req.get('password'))
         with self.transaction_mngr.transaction_scope():
             user = self.user_repo.find_by_username(username)
             if not user:
                 raise ValueError('User not found')
 
-            if user.password != password:
+            if user.password != password_encrypted:
                 raise ValueError('Incorrect password')
 
             return user
 
     def sign_up(self, req: dict) -> int:
         username = req.get('username')
-        password = req.get('password')
+        password_encrypted = encrypt_password(req.get('password'))
 
         with self.transaction_mngr.transaction_scope():
             user = self.user_repo.find_by_username(username)
@@ -58,7 +58,7 @@ class UserUseCase:
                 raise ValueError('User already exists')
 
             new_user_code = self.generate_user_code()
-            user = User(None, new_user_code, username, password)
+            user = User(None, new_user_code, username, password_encrypted)
             return self.user_repo.create(user)
 
     def generate_user_code(self) -> str:

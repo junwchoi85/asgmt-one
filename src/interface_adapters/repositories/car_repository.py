@@ -1,6 +1,7 @@
 from typing import Optional
 from entities.car import Car
 from entities.car_detail import CarDetail
+from entities.car_rental_terms import CarRentalTerms
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.repositories.repository_interface import RepositoryInterface
 
@@ -48,12 +49,31 @@ class CarRepository(RepositoryInterface):
         cursor = self.connection.cursor()
         cursor.execute(
             '''
-            SELECT * FROM car
+            SELECT 
+                car.car_id,
+                car.car_code,
+                car.name,
+                car.year,
+                car.passenger,
+                car.transmission,
+                car.luggage_large,
+                car.luggage_small,
+                car.engine,
+                car.fuel,
+                crt.price_per_day
+            FROM 
+                car car,
+                car_rental_terms crt
+            where car.CAR_id = crt.car_id
             ''')
         rows = cursor.fetchall()
         # print(rows)
         car_list = []
         for row in rows:
+            car_rental_terms = CarRentalTerms(
+                price_per_day=row[10]
+            )
+
             car = Car(
                 car_id=row[0],
                 car_code=row[1],
@@ -64,7 +84,8 @@ class CarRepository(RepositoryInterface):
                 luggage_large=row[6],
                 luggage_small=row[7],
                 engine=row[8],
-                fuel=row[9]
+                fuel=row[9],
+                car_rental_terms=car_rental_terms
             )
             car_list.append(car)
         return car_list
@@ -74,14 +95,33 @@ class CarRepository(RepositoryInterface):
         cursor = self.connection.cursor()
         cursor.execute(
             '''
-            SELECT * FROM car
+            SELECT 
+                car.car_id,
+                car.car_code,
+                car.name,
+                car.year,
+                car.passenger,
+                car.transmission,
+                car.luggage_large,
+                car.luggage_small,
+                car.engine,
+                car.fuel,
+                crt.price_per_day
+            FROM 
+                car car,
+                car_rental_terms crt
+            where car.CAR_id = crt.car_id
             LIMIT ? OFFSET ?
             ''', (page_size, offset))
         rows = cursor.fetchall()
         car_list = []
         for row in rows:
+            car_rental_terms = CarRentalTerms(
+                price_per_day=row[10]
+            )
+
             car = Car(
-                car_id=None,        # hide the car_id
+                car_id=row[0],
                 car_code=row[1],
                 name=row[2],
                 year=row[3],
@@ -90,7 +130,8 @@ class CarRepository(RepositoryInterface):
                 luggage_large=row[6],
                 luggage_small=row[7],
                 engine=row[8],
-                fuel=row[9]
+                fuel=row[9],
+                car_rental_terms=car_rental_terms
             )
             car_list.append(car)
         return car_list

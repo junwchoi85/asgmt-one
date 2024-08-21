@@ -13,6 +13,8 @@ def greet(ctx):
     """ Greet the user """
     customer_controller = ctx.obj['customer_controller']
     user_controller = ctx.obj['user_controller']
+    ctx.obj['customer_controller'] = customer_controller
+    ctx.obj['user_controller'] = user_controller
 
     clear_screen()
     click.echo(
@@ -35,7 +37,6 @@ def greet(ctx):
 
     if option == 1:
         customer_sign_in(obj={'customer_controller': customer_controller})
-        pass
     elif option == 2:
         customer_sign_up(obj={'customer_controller': customer_controller})
         pass

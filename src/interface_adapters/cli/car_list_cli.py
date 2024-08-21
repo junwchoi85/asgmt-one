@@ -20,7 +20,7 @@ def view_car_list(ctx):
         click.echo(f'\nPage {page} - Available Cars:')
         for index, car in enumerate(car_list):
             click.echo(f'{index+1}. name: {car.name}, year: {car.year}, passenger: {car.passenger}, transmission: {
-                car.transmission}, luggage_large: {car.luggage_large}, luggage_small: {car.luggage_small}, engine: {car.engine}, fuel: {car.fuel}')
+                car.transmission}, luggage_large: {car.luggage_large}, luggage_small: {car.luggage_small}, engine: {car.engine}, fuel: {car.fuel}, price_per_day: {car.car_rental_terms.price_per_day}')
 
         click.echo(
             '\nType in \'next\' to go to next page,\n or \'prev\' to go to previous page,\n or \'exit\' to exit. ')
@@ -53,18 +53,33 @@ def view_car_list(ctx):
                            selected_car.luggage_large}, luggage_small: {selected_car.luggage_small}, engine: {selected_car.engine}, fuel: {selected_car.fuel}')
                 confirm = click.prompt('confirm booking? (yes/no)', type=str)
                 if confirm == 'yes':
+                    click.echo('\n\nFrom when would you like to book the car?')
+                    start_date = click.prompt(
+                        'Start Date (YYYY-MM-DD)', type=str)
+                    click.echo('\nUntil when would you like to book the car?')
+                    end_date = click.prompt('End Date (YYYY-MM-DD)', type=str)
+
                     req = {
                         'username': ctx.obj['username'],
                         'car_code': selected_car.car_code,
-                        'start_date': '2021-01-01',
-                        'end_date': '2021-01-31',
+                        'start_date': start_date,
+                        'end_date': end_date,
                     }
-                    customer_controller.make_a_booking(req)
+                    result = customer_controller.make_a_booking(req)
+
+                    status = result['status']
+                    message = result['message']
+                    if status == 'failure':
+                        click.echo(f'Booking failed. {message}')
+                        click.pause('press any key to continue...')
+                        continue
+                    else:
+                        click.echo(f'Booking successful. {message}')
+                        click.pause('press any key to continue...')
+                        # go back to parent menu.
+                        ctx.invoke(ctx.parent.command)
                     # book the car
-                    click.echo('Car booked!\n\n\n\n\n')
-                    # go back to parent menu.
-                    ctx.invoke(ctx.parent.command)
-                    break
+                    # click.echo('Car booked!\n\n\n\n\n')
         else:
             click.echo(
                 'Invalid option. Please enter "next", "prev", or "exit".')
