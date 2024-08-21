@@ -72,6 +72,10 @@ Enjoy using the project!
 We would like to acknowledge the following individuals for their contributions to this project:
 
 - ChatGPT: Assisted with testing and bug fixes.
+- The Web: Thank you for everything.
+
+Thanks to the Internet and its vast data, AI has made significant progress. The Internet provides the data needed to train AI models and make them better. With diverse and large datasets, AI systems can learn and make accurate predictions. Moreover, the Internet is a platform for sharing knowledge, research papers, and open-source projects, which drive the growth and innovation of AI technologies.
+
 
 Thank you to all the contributors for their time and effort in making this project a success!
 
