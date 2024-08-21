@@ -1,21 +1,81 @@
-# Project Name
+# Car Rental System
 
-A brief description of your project goes here.
+## Project Description
+
+This project is a Python-based application developed for the first assignment of the MSE800 Software Engineering course at Yoobee College. The application utilizes a command-line interface (CLI) for user interaction. It aims to demonstrate the understanding and application of software engineering principles and practices.
+
+The project incorporates various features and functionalities, showcasing the use of Python programming language and its libraries. It provides a user-friendly CLI interface for users to interact with the application, perform specific tasks, and obtain desired outputs. The developer also practiced object-oriented programming (OOP) concepts and utilized Clean Architecture for the overall structure of the project. Additionally, pytest was implemented for use case testing.
+
+
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
+- [Contributing](#contributing)
 - [License](#license)
+
 
 ## Installation
 
-Instructions on how to install and set up your project.
+To install this project, follow these steps:
+
+1. Clone the repository to your local machine:
+    ```
+    git clone https://github.com/junwchoi85/asgmt-one.git
+    ```
+
+2. Navigate to the project directory:
+    ```
+    cd your-repository
+    ```
+
+3. Install the necessary dependencies:
+    ```
+    make install
+    ```
+
+4. Configure the project settings:
+    ```
+    make setup_db
+    ```
+
+5. Start the project:
+    ```
+    make run
+    ```
+
+6. Access the project in your web browser at `http://localhost:3000`.
+
+Enjoy using the project!
+
 
 ## Usage
 
-Guidelines on how to use your project and any relevant examples.
+To use this project, follow these steps:
+
+1. Clone the repository to your local machine.
+2. Install the necessary dependencies by running `make install`.
+3. Configure the Databse by running `make setup_db`.
+4. Run the project by running `make run`.
+5. Run unit tests by running `make test`.
+6. Clean cache files and DB by running `make clean`.
+
+Make sure to update the `config.js` file with the appropriate settings for your environment.
+
+Enjoy using the project!
+
+
+## Credit
+
+We would like to acknowledge the following individuals for their contributions to this project:
+
+- ChatGPT: Assisted with testing and bug fixes.
+
+Thank you to all the contributors for their time and effort in making this project a success!
+
+If you would like to contribute to this project, please refer to the [Contributing](#contributing) section for more information.
 
 ## Contributing
 
