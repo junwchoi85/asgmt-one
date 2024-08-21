@@ -4,7 +4,7 @@
 
 This project is a Python-based application developed for the first assignment of the MSE800 Software Engineering course at Yoobee College. The application utilizes a command-line interface (CLI) for user interaction. It aims to demonstrate the understanding and application of software engineering principles and practices.
 
-The project incorporates various features and functionalities, showcasing the use of Python programming language and its libraries. It provides a user-friendly CLI interface for users to interact with the application, perform specific tasks, and obtain desired outputs. The developer also practiced object-oriented programming (OOP) concepts and utilized Clean Architecture for the overall structure of the project. Additionally, pytest was implemented for use case testing.
+The project showcases the utilization of Python programming language and its libraries, incorporating various features and functionalities. It offers a user-friendly CLI interface for seamless user interaction, enabling them to perform specific tasks and obtain desired outputs. The developer also applied object-oriented programming (OOP) concepts and implemented Clean Architecture for the project's structure. Furthermore, pytest was utilized for use case testing, while SQLite3 was chosen for efficient and convenient local development experience.
 
 
 
