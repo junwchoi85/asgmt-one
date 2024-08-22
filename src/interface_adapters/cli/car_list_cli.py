@@ -19,8 +19,16 @@ def view_car_list(ctx):
 
         click.echo(f'\nPage {page} - Available Cars:')
         for index, car in enumerate(car_list):
-            click.echo(f'{index+1}. name: {car.name}, year: {car.year}, passenger: {car.passenger}, transmission: {
-                car.transmission}, luggage_large: {car.luggage_large}, luggage_small: {car.luggage_small}, engine: {car.engine}, fuel: {car.fuel}, price_per_day: {car.car_rental_terms.price_per_day}')
+            click.echo(
+                f'{index+1}. name: {car.name}, year: {car.year}, '
+                f'passenger: {car.passenger}, '
+                f'transmission: {car.transmission}, '
+                f'luggage_large: {car.luggage_large}, '
+                f'luggage_small: {car.luggage_small}, '
+                f'engine: {car.engine}, '
+                f'fuel: {car.fuel}, '
+                f'price_per_day: {car.car_rental_terms.price_per_day}'
+            )
 
         click.echo(
             '\nType in \'next\' to go to next page,\n or \'prev\' to go to previous page,\n or \'exit\' to exit. ')
@@ -49,8 +57,18 @@ def view_car_list(ctx):
                 click.echo('Invalid car number. Please try again.')
             else:
                 selected_car = car_list[selected_index]
-                click.echo(f'You have selected: {selected_car.name}, year: {selected_car.year}, passenger: {selected_car.passenger}, transmission: {selected_car.transmission}, luggage_large: {
-                           selected_car.luggage_large}, luggage_small: {selected_car.luggage_small}, engine: {selected_car.engine}, fuel: {selected_car.fuel}')
+                click.echo(
+                    f'You have selected: {selected_car.name}, year: {
+                        selected_car.year}, '
+                    f'passenger: {selected_car.passenger}, transmission: {
+                        selected_car.transmission}, '
+                    f'luggage_large: {selected_car.luggage_large}, luggage_small: {
+                        selected_car.luggage_small}, '
+                    f'engine: {selected_car.engine}, fuel: {
+                        selected_car.fuel}, '
+                    f'price_per_day: {
+                        selected_car.car_rental_terms.price_per_day}'
+                )
                 confirm = click.prompt('confirm booking? (yes/no)', type=str)
                 if confirm == 'yes':
                     click.echo('\n\nFrom when would you like to book the car?')
@@ -64,6 +82,7 @@ def view_car_list(ctx):
                         'car_code': selected_car.car_code,
                         'start_date': start_date,
                         'end_date': end_date,
+                        'rental_terms': selected_car.car_rental_terms
                     }
                     result = customer_controller.make_a_booking(req)
 
