@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 from entities.car import Car
 from entities.customer import Customer
@@ -85,18 +86,33 @@ class CustomerUseCase:
         :param req: Booking information
         :return: Booking ID
         """
+
+        # Business Logic
+        # get the rental terms of the car
+        car_rental_terms = req['rental_terms']
+
+        # calculate the total fee
+
         username = req['username']
         car_code = req['car_code']
-        total_fee = 100
         status = 'reserved'
         with self.transaction_mngr.transaction_scope():
             customer = self.customer_repo.find_by_username(username)
             car = self.car_repo.find_by_car_code(car_code)
 
+            if not car_rental_terms:
+                car_rental_terms = self.get_rental_terms()
+
             select_car_detail_req = {
                 'car_id': car.car_id
             }
+            # get the car_detail of the car. Here, the car_detail will be selected randomly.
             car_detail = self.car_repo.select_car_detail(select_car_detail_req)
+
+            # Calculate total fee
+            total_fee = self._calculate_total_fee(
+                car_rental_terms.price_per_day, req['start_date'], req['end_date'])
+
             car_dtl_id = car_detail.car_dtl_id
             booking_req = {
                 'cst_id': customer.cst_id,
@@ -108,3 +124,15 @@ class CustomerUseCase:
             }
 
             return self.booking_repository.book_car(booking_req)
+
+    def get_rental_terms(self, car_id: int):
+        with self.transaction_mngr.transaction_scope():
+            return self.car_repo.get_rental_terms(car_id)
+
+    # private method to calculate total fee
+    def _calculate_total_fee(price_per_day: float, start_date: str, end_date: str) -> float:
+        # calculate the total fee
+        return price_per_day * (
+            datetime.datetime.strptime(
+                end_date, '%Y-%m-%d') - datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        ).days

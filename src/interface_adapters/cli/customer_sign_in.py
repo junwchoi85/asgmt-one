@@ -21,9 +21,13 @@ def customer_sign_in(ctx, username, password):
         'username': username,
         'password': password
     }
-    result = customer_controller.sign_in(req)
+    res = customer_controller.sign_in(req)
 
-    if result:
+    if res['status'] == 'failure':
+        click.echo(res['message'])
+        click.pause('Bye bye!')
+        return
+    elif res['status'] == 'success':
         click.echo('Sign in successful')
         customer_main_menu(obj={'username': username,
                                 'customer_controller': customer_controller})

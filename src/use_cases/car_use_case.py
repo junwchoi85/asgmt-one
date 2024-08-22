@@ -16,3 +16,8 @@ class CarUseCase:
     def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
         with self.transaction_mngr.transaction_scope():
             return self.car_repo.get_car_list_paged(page, page_size)
+
+    def get_car_rental_terms_by_car_id(self, req) -> List[Car]:
+        with self.transaction_mngr.transaction_scope():
+            car_id = req['car_id']
+            return self.car_repo.get_car_rental_terms(car_id)
