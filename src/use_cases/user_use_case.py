@@ -38,8 +38,8 @@ class UserUseCase:
     def sign_in(self, req: dict) -> User:
         username = req.get('username')
         password_encrypted = encrypt_password(req.get('password'))
-        with self.transaction_mngr.transaction_scope():
-            user = self.user_repo.find_by_username(username)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            user = self.user_repo.find_by_username(cursor, username)
             if not user:
                 raise ValueError('User not found')
 
@@ -52,20 +52,20 @@ class UserUseCase:
         username = req.get('username')
         password_encrypted = encrypt_password(req.get('password'))
 
-        with self.transaction_mngr.transaction_scope():
-            user = self.user_repo.find_by_username(username)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            user = self.user_repo.find_by_username(cursor, username)
             if user:
                 raise ValueError('User already exists')
 
-            new_user_code = self.generate_user_code()
+            new_user_code = self.generate_user_code(cursor)
             user = User(None, new_user_code, username, password_encrypted)
-            return self.user_repo.create(user)
+            return self.user_repo.create(cursor, user)
 
-    def generate_user_code(self) -> str:
+    def generate_user_code(self, cursor) -> str:
         """
         Generate user code
         """
-        code = self.user_repo.fetch_latest_user_code()
+        code = self.user_repo.fetch_latest_user_code(cursor)
         if code:
             code = code.split('-')
             code[1] = str(int(code[1]) + 1).zfill(4)
@@ -77,8 +77,8 @@ class UserUseCase:
         :return: List of bookings
         """
 
-        with self.transaction_mngr.transaction_scope():
-            return self.booking_repo.get_booking_list(req)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.booking_repo.get_booking_list(cursor, req)
 
     def confirm_booking(self, req: dict):
         """
@@ -86,8 +86,8 @@ class UserUseCase:
         :param req: Request
         :return: None
         """
-        with self.transaction_mngr.transaction_scope():
-            self.booking_repo.update_booking_status(req)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            self.booking_repo.update_booking_status(cursor, req)
 
     def reject_booking(self, req: dict):
         """
@@ -95,5 +95,5 @@ class UserUseCase:
         :param req: Request
         :return: None
         """
-        with self.transaction_mngr.transaction_scope():
-            self.booking_repo.update_booking_status(req)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            self.booking_repo.update_booking_status(cursor, req)

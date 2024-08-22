@@ -8,20 +8,19 @@ class BookingRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
         self.connection = transaction_mngr.transaction_scope()
 
-    def create(self, booking: Booking) -> int:
+    def create(self, cursor, booking: Booking) -> int:
         pass
 
-    def read(self, id: int) -> Optional[dict]:
+    def read(self, cursor, id: int) -> Optional[dict]:
         pass
 
-    def update(self, booking: Booking) -> bool:
+    def update(self, cursor, booking: Booking) -> bool:
         pass
 
-    def delete(self, id: int) -> bool:
+    def delete(self, cursor, id: int) -> bool:
         pass
 
-    def book_car(self, req: dict) -> int:
-        cursor = self.connection.cursor()
+    def book_car(self, cursor,  req: dict) -> int:
         cursor.execute(
             '''
             INSERT INTO booking (cst_id, car_dtl_id, start_date, end_date, total_fee, status)
@@ -30,10 +29,9 @@ class BookingRepository(RepositoryInterface):
             (req['cst_id'], req['car_dtl_id'], req['start_date'], req['end_date'], req['total_fee'], req['status']))
         return cursor.lastrowid
 
-    def get_booking_list(self, req: dict) -> list[Booking]:
+    def get_booking_list(self, cursor, req: dict) -> list[Booking]:
         booking_status = req['status']
 
-        cursor = self.connection.cursor()
         if booking_status is None:
             cursor.execute(
                 '''
@@ -62,8 +60,7 @@ class BookingRepository(RepositoryInterface):
             booking_list.append(booking)
         return booking_list
 
-    def update_booking_status(self, req: dict) -> bool:
-        cursor = self.connection.cursor()
+    def update_booking_status(self, cursor, req: dict) -> bool:
         cursor.execute(
             '''
             UPDATE booking

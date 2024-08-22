@@ -7,7 +7,7 @@ from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
 from interface_adapters.repositories.user_repository import UserRepository
-from utils.logger import get_logger
+from utils.logger import get_test_logger
 
 # 로깅 설정
 
@@ -46,7 +46,7 @@ def db_connection(transaction_manager):
     Returns:
         connection: The database connection object.
     """
-    with transaction_manager as connection:
+    with transaction_manager.transaction_scope() as connection:
         yield connection
 
 # Repository fixtures
@@ -75,4 +75,4 @@ def booking_repo(transaction_manager):
 # Logger fixture
 @pytest.fixture(scope='session')
 def test_logger():
-    return get_logger('test_logger')
+    return get_test_logger('test_logger')

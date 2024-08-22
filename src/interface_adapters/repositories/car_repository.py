@@ -10,20 +10,19 @@ class CarRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
         self.connection = transaction_mngr.transaction_scope()
 
-    def create(self, car: Car) -> int:
+    def create(self, cursor, car: Car) -> int:
         pass
 
-    def read(self, id: int) -> Optional[dict]:
+    def read(self, cursor, id: int) -> Optional[dict]:
         pass
 
-    def update(self, car: Car) -> bool:
+    def update(self, cursor, car: Car) -> bool:
         pass
 
-    def delete(self, id: int) -> bool:
+    def delete(self, cursor, id: int) -> bool:
         pass
 
-    def find_by_car_code(self, car_code: str) -> Optional[Car]:
-        cursor = self.connection.cursor()
+    def find_by_car_code(self, cursor, car_code: str) -> Optional[Car]:
         cursor.execute(
             '''
             SELECT * FROM car
@@ -45,8 +44,7 @@ class CarRepository(RepositoryInterface):
             fuel=row[9]
         )
 
-    def get_car_list(self) -> list[Car]:
-        cursor = self.connection.cursor()
+    def get_car_list(self, cursor) -> list[Car]:
         cursor.execute(
             '''
             SELECT 
@@ -90,9 +88,8 @@ class CarRepository(RepositoryInterface):
             car_list.append(car)
         return car_list
 
-    def get_car_list_paged(self, page: int, page_size: int) -> list[Car]:
+    def get_car_list_paged(self, cursor, page: int, page_size: int) -> list[Car]:
         offset = (page - 1) * page_size
-        cursor = self.connection.cursor()
         cursor.execute(
             '''
             SELECT 
@@ -138,10 +135,9 @@ class CarRepository(RepositoryInterface):
 
     # car detail section
     # TODO : Consider moving this to a separate repository
-    def select_car_detail(self, req: dict) -> CarDetail:
+    def select_car_detail(self, cursor, req: dict) -> CarDetail:
         car_id = req['car_id']
 
-        cursor = self.connection.cursor()
         cursor.execute(
             '''
             SELECT * FROM car_detail
@@ -163,11 +159,10 @@ class CarRepository(RepositoryInterface):
 
     # car rental terms section
     # TODO : Consider moving this to a separate repository
-    def get_rental_terms(self, req: dict) -> CarRentalTerms:
+    def get_rental_terms(self, cursor, req: dict) -> CarRentalTerms:
 
         query, query_params = self._build_car_rental_term_query(req)
 
-        cursor = self.connection.cursor()
         cursor.execute(query, query_params)
         row = cursor.fetchone()
         car_rental_terms = CarRentalTerms(
