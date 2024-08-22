@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import contextmanager
 
 
 class TransactionManager:
@@ -11,37 +12,26 @@ class TransactionManager:
         """
         self.connection = sqlite3.connect(db_path)
 
+    @contextmanager
     def transaction_scope(self):
-        """
-        Returns the connection object for the transaction scope.
-
-        :return: The connection object for the transaction scope.
-        """
-        return self.connection
-
-    def __enter__(self):
-        """
-        Enter method for the transaction manager.
-
-        Returns:
-            connection: The connection object for the transaction.
-        """
-        self.connection.execute('BEGIN')
-        return self.connection
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """
-        Exit the transaction manager context.
-
-        Args:
-            exc_type: The type of the exception raised, if any.
-            exc_val: The exception instance raised, if any.
-            exc_tb: The traceback of the exception raised, if any.
-        """
-        if exc_type is not None:
-            self.connection.execute('ROLLBACK')
-        else:
-            self.connection.execute('COMMIT')
+        try:
+            cursor = self.connection.cursor()
+            yield cursor
+            self.connection.commit()
+        except sqlite3.IntegrityError as e:
+            self.connection.rollback()
+            raise RuntimeError(f"Integrity error occurred: {e}")
+        except sqlite3.OperationalError as e:
+            self.connection.rollback()
+            raise RuntimeError(f"Operational error occurred: {e}")
+        except sqlite3.ProgrammingError as e:
+            self.connection.rollback()
+            raise RuntimeError(f"Programming error occurred: {e}")
+        except sqlite3.Error as e:
+            self.connection.rollback()
+            raise RuntimeError(f"Error occurred: {e}")
+        finally:
+            cursor.close()
 
     def close_connection(self):
         """

@@ -25,14 +25,14 @@ class CustomerUseCase:
         # Encrypt password
         encrypted_password = encrypt_password(req['password'])
 
-        with self.transaction_mngr.transaction_scope():
+        with self.transaction_mngr.transaction_scope() as cursor:
             customer = Customer(
                 cst_id=None,
-                cst_code=self.generate_customer_code(),
+                cst_code=self.generate_customer_code(cursor),
                 username=req['username'],
                 password=encrypted_password
             )
-            return self.customer_repo.create(customer)
+            return self.customer_repo.create(cursor, customer)
 
     def find_user_by_username(self, username: str) -> Customer:
         with self.transaction_mngr.transaction_scope():
@@ -49,12 +49,11 @@ class CustomerUseCase:
                 raise ValueError('Incorrect password')
             return customer
 
-    def generate_customer_code(self) -> str:
-        with self.transaction_mngr.transaction_scope():
-            code = self.customer_repo.fetch_latest_customer_code()
-            code = code.split('-')
-            code[1] = str(int(code[1]) + 1).zfill(4)
-            return '-'.join(code)
+    def generate_customer_code(self, cursor) -> str:
+        code = self.customer_repo.fetch_latest_customer_code(cursor)
+        code = code.split('-')
+        code[1] = str(int(code[1]) + 1).zfill(4)
+        return '-'.join(code)
 
     # Car section. TODO: Consider moving this to a separate use case
     def get_car_list(self) -> List[Car]:
@@ -111,7 +110,10 @@ class CustomerUseCase:
 
             # Calculate total fee
             total_fee = self._calculate_total_fee(
-                car_rental_terms.price_per_day, req['start_date'], req['end_date'])
+                car_rental_terms.price_per_day,
+                req['start_date'],
+                req['end_date']
+            )
 
             car_dtl_id = car_detail.car_dtl_id
             booking_req = {
@@ -130,7 +132,9 @@ class CustomerUseCase:
             return self.car_repo.get_rental_terms(car_id)
 
     # private method to calculate total fee
-    def _calculate_total_fee(price_per_day: float, start_date: str, end_date: str) -> float:
+    def _calculate_total_fee(price_per_day: float,
+                             start_date: str,
+                             end_date: str) -> float:
         # calculate the total fee
         return price_per_day * (
             datetime.datetime.strptime(

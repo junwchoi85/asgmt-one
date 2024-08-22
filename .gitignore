@@ -2,3 +2,4 @@
 venv/
 *.db
 mseboo.db
+logs/*

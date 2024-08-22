@@ -33,5 +33,5 @@ def customer_main_menu(ctx):
         click.echo('View my bookings')
     elif choice == 4:
         click.echo('Sign out')
-        click.echo('Bye bye!')
+        click.pause('Bye bye!')
         exit()

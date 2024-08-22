@@ -8,8 +8,7 @@ class CustomerRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
         self.connection = transaction_mngr.transaction_scope()
 
-    def create(self, customer: Customer) -> int:
-        cursor = self.connection.cursor()
+    def create(self, cursor, customer: Customer) -> int:
         cursor.execute(
             '''
             INSERT INTO customer (cst_code, username, password)
@@ -36,12 +35,11 @@ class CustomerRepository(RepositoryInterface):
         # TODO: Implement this method
         pass
 
-    def fetch_latest_customer_code(self) -> str:
+    def fetch_latest_customer_code(self, cursor) -> str:
         """
         Generate customer code
         :return: Customer code
         """
-        cursor = self.connection.cursor()
         cursor.execute(
             '''
             SELECT cst_code FROM customer ORDER BY cst_id DESC LIMIT 1

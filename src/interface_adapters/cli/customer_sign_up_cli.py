@@ -1,5 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.cli_util import is_success
 from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 
 
@@ -11,7 +12,7 @@ def customer_sign_up(ctx, username, password):
     """ Sign Up """
     # TODO : encrypt password
     clear_screen()
-    click.echo('Sign Up')
+    # click.echo('Sign Up')
 
     customer_controller = ctx.obj['customer_controller']
     if not username or not password:
@@ -21,13 +22,13 @@ def customer_sign_up(ctx, username, password):
         'username': username,
         'password': password
     }
-    result = customer_controller.sign_up(req)
+    res = customer_controller.sign_up(req)
 
-    if result:
+    if is_success(res):
         click.echo('Sign in successful')
         customer_main_menu(
             obj={'username': username, 'customer_controller': customer_controller})
     else:
-        # TODO : Should go back to the main menu?
-        click.echo('Invalid Username or Password')
-        exit()
+        click.echo(res['message'])
+        click.pause('Bye bye!')
+        return
