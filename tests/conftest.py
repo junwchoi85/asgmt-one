@@ -1,4 +1,3 @@
-import logging
 import os
 import pytest
 
@@ -8,6 +7,7 @@ from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
 from interface_adapters.repositories.customer_repository import CustomerRepository
 from interface_adapters.repositories.user_repository import UserRepository
+from utils.logger import get_logger
 
 # 로깅 설정
 
@@ -75,11 +75,4 @@ def booking_repo(transaction_manager):
 # Logger fixture
 @pytest.fixture(scope='session')
 def test_logger():
-    logger = logging.getLogger('test_logger')
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
+    return get_logger('test_logger')
