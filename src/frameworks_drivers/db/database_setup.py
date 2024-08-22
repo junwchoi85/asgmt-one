@@ -10,9 +10,7 @@ def setup_database(transaction_manager: TransactionManager):
     print('Database connection established')
 
     try:
-        with transaction_manager as conn:
-            c = conn.cursor()
-
+        with transaction_manager.transaction_scope() as c:
             # Drop tables if they exist
             c.execute('DROP TABLE IF EXISTS customer;')
             c.execute('DROP TABLE IF EXISTS user;')
