@@ -10,7 +10,6 @@ from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 @click.option('--password', prompt='Your password', help='The password')
 def customer_sign_up(ctx, username, password):
     """ Sign Up """
-    # TODO : encrypt password
     clear_screen()
     # click.echo('Sign Up')
 
@@ -22,6 +21,8 @@ def customer_sign_up(ctx, username, password):
         'username': username,
         'password': password
     }
+
+    # signup
     res = customer_controller.sign_up(req)
 
     if is_success(res):

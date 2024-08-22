@@ -108,7 +108,8 @@ class CustomerUseCase:
                 'car_id': car.car_id
             }
             # get the car_detail of the car. Here, the car_detail will be selected randomly.
-            car_detail = self.car_repo.select_car_detail(select_car_detail_req)
+            car_detail = self.car_repo.select_car_detail(
+                cursor, select_car_detail_req)
 
             # Calculate total fee
             total_fee = self._calculate_total_fee(
@@ -127,17 +128,19 @@ class CustomerUseCase:
                 'status': status
             }
 
-            return self.booking_repository.book_car(booking_req)
+            return self.booking_repository.book_car(cursor, booking_req)
 
     def get_rental_terms(cursor, self, car_id: int):
         return self.car_repo.get_rental_terms(cursor, car_id)
 
     # private method to calculate total fee
-    def _calculate_total_fee(price_per_day: float,
+    def _calculate_total_fee(self,
+                             price_per_day: float,
                              start_date: str,
                              end_date: str) -> float:
         # calculate the total fee
-        return price_per_day * (
+        total_fee = price_per_day * (
             datetime.datetime.strptime(
                 end_date, '%Y-%m-%d') - datetime.datetime.strptime(start_date, '%Y-%m-%d')
         ).days
+        return round(total_fee, 2)

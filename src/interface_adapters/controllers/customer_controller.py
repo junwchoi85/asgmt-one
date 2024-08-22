@@ -36,7 +36,7 @@ class CustomerController:
 
         if result:
             return Response(
-                status_code=constants.MESSAGE_SIGN_UP_SUCCESS,
+                status_code=constants.STATUS_SUCCESS,
                 message=constants.MESSAGE_SIGN_UP_SUCCESS
             ).to_dict()
 
@@ -116,7 +116,7 @@ class CustomerController:
                 message=constants.MESSAGE_START_DATE_BEFORE_END_DATE
             ).to_dict()
         # validate if start_date is in the past
-        if datetime.datetime.strptime(start_date, '%Y-%m-%d') < datetime.datetime.now():
+        if parse_date(start_date) < datetime.datetime.now():
             return Response(
                 status_code=constants.STATUS_FAILURE,
                 message=constants.MESSAGE_START_DATE_IN_FUTURE

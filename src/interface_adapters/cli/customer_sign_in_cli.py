@@ -1,5 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.cli_util import is_success
 from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 
 
@@ -24,11 +25,11 @@ def customer_sign_in(ctx, username, password):
     # singin
     res = customer_controller.sign_in(req)
 
-    if res['statusCode'] == 'failure':
-        click.echo(res['message'])
-        click.pause('Bye bye!')
-        return
-    elif res['statusCode'] == 'success':
+    if is_success(res):
         click.echo('Sign in successful')
         customer_main_menu(obj={'username': username,
                                 'customer_controller': customer_controller})
+    else:
+        click.echo(res['message'])
+        click.pause('Bye bye!')
+        return

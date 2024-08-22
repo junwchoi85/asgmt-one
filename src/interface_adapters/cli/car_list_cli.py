@@ -1,5 +1,7 @@
 import click
 
+from interface_adapters.cli.cli_util import is_success
+
 
 @click.command()
 @click.pass_context
@@ -71,34 +73,39 @@ def view_car_list(ctx):
                 )
                 confirm = click.prompt('confirm booking? (yes/no)', type=str)
                 if confirm == 'yes':
-                    click.echo('\n\nFrom when would you like to book the car?')
-                    start_date = click.prompt(
-                        'Start Date (YYYY-MM-DD)', type=str)
-                    click.echo('\nUntil when would you like to book the car?')
-                    end_date = click.prompt('End Date (YYYY-MM-DD)', type=str)
+                    username = ctx.obj['username']
+                    car_code = selected_car.car_code
+                    car_rental_terms = selected_car.car_rental_terms
 
-                    req = {
-                        'username': ctx.obj['username'],
-                        'car_code': selected_car.car_code,
-                        'start_date': start_date,
-                        'end_date': end_date,
-                        'rental_terms': selected_car.car_rental_terms
-                    }
-                    result = customer_controller.make_a_booking(req)
+                    res = book_a_car(
+                        customer_controller, username, car_code, car_rental_terms)
 
-                    status = result['status']
-                    message = result['message']
-                    if status == 'failure':
-                        click.echo(f'Booking failed. {message}')
-                        click.pause('press any key to continue...')
-                        continue
-                    else:
-                        click.echo(f'Booking successful. {message}')
+                    if is_success(res):
+                        click.echo(f'Booking successful. {res['message']}')
                         click.pause('press any key to continue...')
                         # go back to parent menu.
                         ctx.invoke(ctx.parent.command)
-                    # book the car
-                    # click.echo('Car booked!\n\n\n\n\n')
+                    else:
+                        click.echo(f'Booking failed. {res['message']}')
+                        click.pause('press any key to continue...')
+                        continue
         else:
             click.echo(
                 'Invalid option. Please enter "next", "prev", or "exit".')
+
+
+def book_a_car(customer_controller, username, car_code, car_rental_terms):
+    click.echo('\n\nFrom when would you like to book the car?')
+    start_date = click.prompt(
+        'Start Date (YYYY-MM-DD)', type=str)
+    click.echo('\nUntil when would you like to book the car?')
+    end_date = click.prompt('End Date (YYYY-MM-DD)', type=str)
+
+    req = {
+        'username': username,
+        'car_code': car_code,
+        'start_date': start_date,
+        'end_date': end_date,
+        'rental_terms': car_rental_terms
+    }
+    return customer_controller.make_a_booking(req)
