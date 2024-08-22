@@ -23,7 +23,7 @@ class Car(BaseEntity):
         self.luggage_small = luggage_small
         self.engine = engine
         self.fuel = fuel
-
+        # Car rental terms
         self.car_rental_terms = car_rental_terms
 
         super().__init__(created_at, created_by, updated_at, updated_by)
