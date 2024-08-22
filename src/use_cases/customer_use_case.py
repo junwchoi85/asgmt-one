@@ -22,27 +22,29 @@ class CustomerUseCase:
         self.booking_repository = booking_repo
 
     def sign_up(self, req: dict) -> int:
-        # Encrypt password
-        encrypted_password = encrypt_password(req['password'])
-
+        """
+        Sign up a new user
+        :param req: User information
+        :return: User ID
+        """
         with self.transaction_mngr.transaction_scope() as cursor:
             customer = Customer(
                 cst_id=None,
                 cst_code=self.generate_customer_code(cursor),
                 username=req['username'],
-                password=encrypted_password
+                password=encrypt_password(req['password'])
             )
             return self.customer_repo.create(cursor, customer)
 
     def find_user_by_username(self, username: str) -> Customer:
-        with self.transaction_mngr.transaction_scope():
-            return self.customer_repo.find_by_username(username)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.customer_repo.find_by_username(cursor, username)
 
     def sign_in(self, customer_data: dict) -> Customer:
         username = customer_data['username']
         encrypted_password = encrypt_password(customer_data['password'])
-        with self.transaction_mngr.transaction_scope():
-            customer = self.customer_repo.find_by_username(username)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            customer = self.customer_repo.find_by_username(cursor, username)
             if not customer:
                 raise ValueError('User not found')
             if customer.password != encrypted_password:
@@ -61,8 +63,8 @@ class CustomerUseCase:
         Get a list of cars
         :return: List of cars
         """
-        with self.transaction_mngr.transaction_scope():
-            return self.car_repo.get_car_list()
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.car_repo.get_car_list(cursor)
 
     def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
         """
@@ -75,8 +77,8 @@ class CustomerUseCase:
             page = 1
         if page_size < 1:
             page_size = 10
-        with self.transaction_mngr.transaction_scope():
-            return self.car_repo.get_car_list_paged(page, page_size)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.car_repo.get_car_list_paged(cursor, page, page_size)
 
     # Booking section. TODO: Consider moving this to a separate use case
     def make_a_booking(self, req: dict) -> int:
@@ -95,12 +97,12 @@ class CustomerUseCase:
         username = req['username']
         car_code = req['car_code']
         status = 'reserved'
-        with self.transaction_mngr.transaction_scope():
-            customer = self.customer_repo.find_by_username(username)
-            car = self.car_repo.find_by_car_code(car_code)
+        with self.transaction_mngr.transaction_scope() as cursor:
+            customer = self.customer_repo.find_by_username(cursor, username)
+            car = self.car_repo.find_by_car_code(cursor, car_code)
 
             if not car_rental_terms:
-                car_rental_terms = self.get_rental_terms()
+                car_rental_terms = self.get_rental_terms(cursor)
 
             select_car_detail_req = {
                 'car_id': car.car_id
@@ -127,9 +129,8 @@ class CustomerUseCase:
 
             return self.booking_repository.book_car(booking_req)
 
-    def get_rental_terms(self, car_id: int):
-        with self.transaction_mngr.transaction_scope():
-            return self.car_repo.get_rental_terms(car_id)
+    def get_rental_terms(cursor, self, car_id: int):
+        return self.car_repo.get_rental_terms(cursor, car_id)
 
     # private method to calculate total fee
     def _calculate_total_fee(price_per_day: float,

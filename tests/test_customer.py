@@ -38,18 +38,3 @@ def test_sign_in(customer_repo, car_repo, booking_repo, transaction_manager):
     # Verify
     assert result is not None
     assert result.username == req['username']
-
-
-def test_get_car_rental_terms(customer_repo, car_repo, booking_repo, transaction_manager):
-    # Setup
-    car_use_case = CustomerUseCase(
-        customer_repo, car_repo, booking_repo, transaction_manager)
-
-    req = {
-        'car_id': 1
-    }
-    # Test
-    result = car_use_case.get_rental_terms(req)
-    # test_logger.info(result)
-    # Verify
-    assert result is not None

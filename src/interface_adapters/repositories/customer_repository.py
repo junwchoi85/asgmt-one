@@ -17,8 +17,7 @@ class CustomerRepository(RepositoryInterface):
             (customer.cst_code, customer.username, customer.password))
         return cursor.lastrowid
 
-    def read(self, id: int) -> Optional[dict]:
-        cursor = self.connection.cursor()
+    def read(self, cursor, id: int) -> Optional[dict]:
         cursor.execute(
             '''
             SELECT * FROM customer WHERE cst_id = ?
@@ -27,11 +26,11 @@ class CustomerRepository(RepositoryInterface):
         row = cursor.fetchone()
         return dict(row) if row else None
 
-    def update(self, customer: Customer) -> bool:
+    def update(self, cursor, customer: Customer) -> bool:
         # TODO: Implement this method
         pass
 
-    def delete(self, id: int) -> bool:
+    def delete(self, cursor, id: int) -> bool:
         # TODO: Implement this method
         pass
 
@@ -51,13 +50,12 @@ class CustomerRepository(RepositoryInterface):
         else:
             return 'cst-001'
 
-    def find_by_username(self, username: str) -> Customer:
+    def find_by_username(self, cursor, username: str) -> Customer:
         """
         Get a customer by username
         :param username: Username
         :return: Customer object
         """
-        cursor = self.connection.cursor()
         cursor.execute(
             '''
             SELECT * FROM customer WHERE username = ?

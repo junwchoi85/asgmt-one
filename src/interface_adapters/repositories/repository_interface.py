@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
+
 class RepositoryInterface(ABC):
 
     @abstractmethod
-    def create(self, entity) -> int:
+    def create(self, cursor, entity) -> int:
         """
         Create a new entity
         :param entity: Entity to be created
@@ -13,7 +14,7 @@ class RepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def read(self, id: int) -> Optional[dict]:
+    def read(self, cursor, id: int) -> Optional[dict]:
         """
         Read an entity by id
         :param id: Entity id
@@ -22,7 +23,7 @@ class RepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def update(self, entity) -> bool:
+    def update(self, cursor, entity) -> bool:
         """
         Update an entity
         :param entity: Entity to be updated
@@ -31,7 +32,7 @@ class RepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def delete(self, id: int)-> bool:
+    def delete(self, cursor, id: int) -> bool:
         """
         Delete an entity
         :param id: Entity id
