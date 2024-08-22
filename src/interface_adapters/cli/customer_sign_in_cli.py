@@ -8,10 +8,9 @@ from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 @click.option('--username', prompt='Your username', help='The user name')
 @click.option('--password', prompt='Your password', help='The password')
 def customer_sign_in(ctx, username, password):
-    """ Sign In """
-    # TODO : encrypt password
+    """ Sign In cli """
     clear_screen()
-    click.echo('Sign In')
+    # click.echo('Sign In')
 
     customer_controller = ctx.obj['customer_controller']
     if not username or not password:
@@ -21,17 +20,15 @@ def customer_sign_in(ctx, username, password):
         'username': username,
         'password': password
     }
+
+    # singin
     res = customer_controller.sign_in(req)
 
-    if res['status'] == 'failure':
+    if res['statusCode'] == 'failure':
         click.echo(res['message'])
         click.pause('Bye bye!')
         return
-    elif res['status'] == 'success':
+    elif res['statusCode'] == 'success':
         click.echo('Sign in successful')
         customer_main_menu(obj={'username': username,
                                 'customer_controller': customer_controller})
-    else:
-        # TODO : Should go back to the main menu?
-        click.echo('Invalid Username or Password')
-        exit()

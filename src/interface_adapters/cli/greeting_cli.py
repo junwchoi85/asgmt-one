@@ -3,8 +3,8 @@ import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
 from interface_adapters.cli.sign_up_cli import signUp
 from interface_adapters.cli.sign_in_cli import signIn
-from interface_adapters.cli.customer_sign_in import customer_sign_in
-from interface_adapters.cli.customer_sign_up import customer_sign_up
+from interface_adapters.cli.customer_sign_in_cli import customer_sign_in
+from interface_adapters.cli.customer_sign_up_cli import customer_sign_up
 
 
 @click.command()
