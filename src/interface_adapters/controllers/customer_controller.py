@@ -6,13 +6,13 @@ from entities.car import Car
 from interface_adapters.response import Response
 from use_cases.customer_use_case import CustomerUseCase
 from utils.date_utils import parse_date
-from utils.logger import get_logger
+from utils.logger import get_app_logger
 
 
 class CustomerController:
     def __init__(self, customer_use_case: CustomerUseCase):
         self.customer_use_case = customer_use_case
-        self.logger = get_logger()
+        self.logger = get_app_logger()
 
     def sign_up(self, req: dict):
         """
