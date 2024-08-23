@@ -1,6 +1,8 @@
+from typing import List
 import uuid
 
 from entities.booking import Booking
+from entities.car import Car
 from entities.user import User
 from interface_adapters.repositories.booking_repository import BookingRepository
 from interface_adapters.repositories.car_repository import CarRepository
@@ -97,3 +99,17 @@ class UserUseCase:
         """
         with self.transaction_mngr.transaction_scope() as cursor:
             self.booking_repo.update_booking_status(cursor, req)
+
+    def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
+        """
+        Get a list of cars with pagination
+        :param page: Page number
+        :param page_size: Number of items per page
+        :return: List of cars
+        """
+        if page < 1:
+            page = 1
+        if page_size < 1:
+            page_size = 10
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.car_repo.get_car_list_paged(cursor, page, page_size)

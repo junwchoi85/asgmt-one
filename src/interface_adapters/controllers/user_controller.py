@@ -1,4 +1,6 @@
+from typing import List
 from entities.booking import Booking
+from entities.car import Car
 from use_cases.user_use_case import UserUseCase
 
 
@@ -33,3 +35,6 @@ class UserController:
             return {"status": "success"}
         else:
             return {"status": "failure", "message": "Booking not found"}
+
+    def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
+        return self.user_use_case.get_car_list_paged(page, page_size)

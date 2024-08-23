@@ -1,6 +1,7 @@
 import click
 
 from interface_adapters.cli.manage_booking_cli import manage_booking
+from interface_adapters.cli.manage_car_info_cli import manage_car_info
 
 
 @click.command()
@@ -22,7 +23,7 @@ def user_main_menu(ctx):
     while (choice < 1 or choice > 4):
         choice = click.prompt('Invalid option. Please try again ', type=int)
     if choice == 1:
-        click.echo('Manage Car Information')
+        ctx.invoke(manage_car_info)
     elif choice == 2:
         ctx.invoke(manage_booking)
     elif choice == 3:
