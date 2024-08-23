@@ -1,10 +1,13 @@
 import click
 
+from interface_adapters.cli.update_car_cli import update_car_info
+
 
 @click.command()
 @click.pass_context
 def manage_car_info(ctx):
     """ Manage Car Information Menu """
+    click.clear()
     click.echo('Please choose an option from the menu below:')
     click.echo('1. View Car List')
     click.echo('2. Add Car')
@@ -29,6 +32,7 @@ def manage_car_info(ctx):
 @click.command()
 @click.pass_context
 def view_car_list(ctx):
+    click.clear()
     user_controller = ctx.obj['user_controller']
 
     page = 1
@@ -79,6 +83,7 @@ def view_car_list(ctx):
             if selected_index < 0 or selected_index >= len(car_list):
                 click.echo('Invalid car number. Please try again.')
             else:
+                click.clear()
                 selected_car = car_list[selected_index]
                 click.echo(
                     f'You have selected: {selected_car.name}, year: {
@@ -97,7 +102,8 @@ def view_car_list(ctx):
                 click.echo('3. Back')
                 action = click.prompt('choose action')
                 if action == '1':
-                    ctx.invoke(update_car_info, car=selected_car)
+                    ctx.obj['car'] = selected_car
+                    ctx.invoke(update_car_info)
                 elif action == '2':
                     ctx.invoke(delete_car, car=selected_car)
                 elif action == '3':
@@ -106,6 +112,7 @@ def view_car_list(ctx):
                     click.echo('Invalid action. Please try again.')
         else:
             click.echo('Invalid action. Please try again.')
+            click.pause('Press any key to continue...')
             continue
 
         click.echo('Invalid action. Please try again.')

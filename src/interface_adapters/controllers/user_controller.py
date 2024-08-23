@@ -1,6 +1,8 @@
 from typing import List
+from constants import cli_constants as constants
 from entities.booking import Booking
 from entities.car import Car
+from interface_adapters.response import Response
 from use_cases.user_use_case import UserUseCase
 
 
@@ -38,3 +40,18 @@ class UserController:
 
     def get_car_list_paged(self, page: int, page_size: int) -> List[Car]:
         return self.user_use_case.get_car_list_paged(page, page_size)
+
+    def update_car_info(self, req: dict):
+
+        result = self.user_use_case.update_car_info(req)
+
+        if result:
+            return Response(
+                status_code=constants.STATUS_SUCCESS,
+                message=constants.MESSAGE_CAR_UPDATE_SUCCESS
+            ).to_dict()
+        else:
+            return Response(
+                status_code=constants.STATUS_FAILURE,
+                message=constants.MESSAGE_CAR_NOT_FOUND
+            ).to_dict()

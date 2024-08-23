@@ -18,3 +18,5 @@ MESSAGE_BOOKING_SUCCESS = "Booking successful"
 MESSAGE_BOOKING_FAILURE = "Booking failed. Please contact support"
 
 MESSAGE_CONTACT_SUPPORT = "Please contact support"
+MESSAGE_CAR_NOT_FOUND = "Car not found"
+MESSAGE_CAR_UPDATE_SUCCESS = "Car information updated successfully"

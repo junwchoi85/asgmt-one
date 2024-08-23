@@ -60,3 +60,6 @@ class UserRepository(RepositoryInterface):
         #     code = code.split('-')
         #     code = int(code[1]) + 1
         #     return code
+
+    def update_car_info(self, cursor, req: dict) -> bool:
+        pass

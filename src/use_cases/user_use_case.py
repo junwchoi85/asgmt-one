@@ -113,3 +113,12 @@ class UserUseCase:
             page_size = 10
         with self.transaction_mngr.transaction_scope() as cursor:
             return self.car_repo.get_car_list_paged(cursor, page, page_size)
+
+    def update_car_info(self, req: dict):
+        """
+        Update car information
+        :param req: Request
+        :return: None
+        """
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.car_repo.update(cursor, req)
