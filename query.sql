@@ -1,1 +1,5 @@
-select car.*, crt.price_per_day from car car, car_rental_terms crt where car.CAR_id = crt.car_id
+select 
+    *
+from booking book, car_detail dtl, car car
+where book.car_dtl_id = dtl.car_dtl_id
+and dtl.car_id = car.car_id

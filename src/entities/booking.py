@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from entities.base_entity import BaseEntity
+from entities.car import Car
+from entities.car_detail import CarDetail
+from entities.customer import Customer
 
 
 class Booking(BaseEntity):

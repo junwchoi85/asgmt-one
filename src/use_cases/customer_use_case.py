@@ -19,7 +19,7 @@ class CustomerUseCase:
         self.customer_repo = customer_repository
         self.car_repo = car_repository
         self.transaction_mngr = transaction_mngr
-        self.booking_repository = booking_repo
+        self.booking_repo = booking_repo
 
     def sign_up(self, req: dict) -> int:
         """
@@ -102,7 +102,10 @@ class CustomerUseCase:
             car = self.car_repo.find_by_car_code(cursor, car_code)
 
             if not car_rental_terms:
-                car_rental_terms = self.get_rental_terms(cursor)
+                req = {
+                    'car_id': car.car_id
+                }
+                car_rental_terms = self.car_repo.get_rental_terms(cursor, req)
 
             select_car_detail_req = {
                 'car_id': car.car_id
@@ -128,10 +131,7 @@ class CustomerUseCase:
                 'status': status
             }
 
-            return self.booking_repository.book_car(cursor, booking_req)
-
-    def get_rental_terms(cursor, self, car_id: int):
-        return self.car_repo.get_rental_terms(cursor, car_id)
+            return self.booking_repo.book_car(cursor, booking_req)
 
     # private method to calculate total fee
     def _calculate_total_fee(self,
@@ -144,3 +144,14 @@ class CustomerUseCase:
                 end_date, '%Y-%m-%d') - datetime.datetime.strptime(start_date, '%Y-%m-%d')
         ).days
         return round(total_fee, 2)
+
+    def get_customer_booking_list(self, req: dict):
+        with self.transaction_mngr.transaction_scope() as cursor:
+
+            customer = self.find_user_by_username(req['username'])
+            if customer:
+                req = {
+                    'cst_id': customer.cst_id
+                }
+
+            return self.booking_repo.get_booking_detail_list(cursor, req)

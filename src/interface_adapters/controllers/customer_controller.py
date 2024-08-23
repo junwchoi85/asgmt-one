@@ -135,3 +135,11 @@ class CustomerController:
             status_code=constants.STATUS_FAILURE,
             message=constants.MESSAGE_BOOKING_FAILURE
         ).to_dict()
+
+    def get_booking_list(self, req: dict):
+        """
+        Get booking list
+        :param req: Request
+        :return: Response dict
+        """
+        return self.customer_use_case.get_customer_booking_list(req)

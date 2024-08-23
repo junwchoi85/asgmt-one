@@ -29,7 +29,7 @@ def reject_booking(ctx):
     user_controller = ctx.obj['user_controller']
 
     req = {
-        'status': 'reserved'
+        'booking_status': 'reserved'
     }
     res = user_controller.get_booking_list(req)
     booking_list = res['booking_list']

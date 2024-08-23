@@ -1,6 +1,7 @@
 import click
 
 from interface_adapters.cli.car_list_cli import view_car_list
+from interface_adapters.cli.view_customer_booking_cli import view_my_booking
 
 
 @click.command()
@@ -26,11 +27,10 @@ def customer_main_menu(ctx):
             'Invalid option. Please try again ', type=int)
     if choice == 1:
         ctx.invoke(view_car_list)
-        # veiw_car_list(obj={'username': username, 'customer_controller': customer_controller})
     elif choice == 2:
-        click.echo('Book a car')
+        ctx.invoke(view_car_list)   # same as choice 1
     elif choice == 3:
-        click.echo('View my bookings')
+        ctx.invoke(view_my_booking)
     elif choice == 4:
         click.echo('Sign out')
         click.pause('Bye bye!')
