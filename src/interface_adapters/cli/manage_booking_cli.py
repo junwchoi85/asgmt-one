@@ -21,6 +21,8 @@ def manage_booking(ctx):
         ctx.invoke(confirm_booking)
     elif option == 3:
         ctx.invoke(reject_booking)
+    elif option == 4:
+        ctx.invoke(ctx.parent.command)
 
 
 @click.command()
