@@ -1,5 +1,6 @@
 import click
 
+from interface_adapters.cli.delete_car_cli import delete_car_info
 from interface_adapters.cli.update_car_cli import update_car_info
 
 
@@ -105,7 +106,8 @@ def view_car_list(ctx):
                     ctx.obj['car'] = selected_car
                     ctx.invoke(update_car_info)
                 elif action == '2':
-                    ctx.invoke(delete_car, car=selected_car)
+                    ctx.obj['car'] = selected_car
+                    ctx.invoke(delete_car_info)
                 elif action == '3':
                     continue
                 else:

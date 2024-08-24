@@ -15,15 +15,40 @@ class CarRepository(RepositoryInterface):
     def create(self, cursor, car: Car) -> int:
         pass
 
-    def read(self, cursor, id: int) -> Optional[dict]:
-        pass
+    def read(self, cursor, id: int) -> Optional[Car]:
+        """
+        select car by id
+        return car info
+        """
+        cursor.execute(
+            '''
+            SELECT * FROM car
+            WHERE car_id = ?
+            ''', (id,))
+        row = cursor.fetchone()
+        if row is None:
+            return None
+        return Car(
+            car_id=row[0],
+            car_code=row[1],
+            name=row[2],
+            year=row[3],
+            passenger=row[4],
+            transmission=row[5],
+            luggage_large=row[6],
+            luggage_small=row[7],
+            engine=row[8],
+            fuel=row[9],
+            status=row[10]
+        )
 
     def update(self, cursor, req: dict) -> bool:
         query, query_params = self._build_car_update_query(req)
         return cursor.execute(query, query_params)
 
-    def delete(self, cursor, id: int) -> bool:
-        pass
+    def delete(self, cursor, req: dict) -> bool:
+        query, query_params = self._build_car_update_query(req)
+        return cursor.execute(query, query_params)
 
     def _build_car_update_query(self, req: dict) -> tuple:
         query = 'UPDATE car SET '
@@ -55,6 +80,9 @@ class CarRepository(RepositoryInterface):
         if 'fuel' in req and req['fuel']:
             update_fields.append('fuel = ?')
             query_params.append(req['fuel'])
+        if 'status' in req and req['status']:
+            update_fields.append('status = ?')
+            query_params.append(req['status'])
 
         if update_fields:
             query += ', '.join(update_fields)
@@ -85,7 +113,8 @@ class CarRepository(RepositoryInterface):
             luggage_large=row[6],
             luggage_small=row[7],
             engine=row[8],
-            fuel=row[9]
+            fuel=row[9],
+            status=row[10]
         )
 
     def get_car_list(self, cursor) -> list[Car]:
@@ -102,6 +131,7 @@ class CarRepository(RepositoryInterface):
                 car.luggage_small,
                 car.engine,
                 car.fuel,
+                car.status,
                 crt.price_per_day
             FROM 
                 car car,
@@ -113,7 +143,7 @@ class CarRepository(RepositoryInterface):
         car_list = []
         for row in rows:
             car_rental_terms = CarRentalTerms(
-                price_per_day=row[10]
+                price_per_day=row[11]
             )
 
             car = Car(
@@ -127,6 +157,7 @@ class CarRepository(RepositoryInterface):
                 luggage_small=row[7],
                 engine=row[8],
                 fuel=row[9],
+                status=row[10],
                 car_rental_terms=car_rental_terms
             )
             car_list.append(car)
@@ -147,18 +178,20 @@ class CarRepository(RepositoryInterface):
                 car.luggage_small,
                 car.engine,
                 car.fuel,
+                car.status,
                 crt.price_per_day
             FROM 
                 car car,
                 car_rental_terms crt
             where car.CAR_id = crt.car_id
+            and car.status = 'ACTIVE'
             LIMIT ? OFFSET ?
             ''', (page_size, offset))
         rows = cursor.fetchall()
         car_list = []
         for row in rows:
             car_rental_terms = CarRentalTerms(
-                price_per_day=row[10]
+                price_per_day=row[11]
             )
 
             car = Car(
@@ -172,6 +205,7 @@ class CarRepository(RepositoryInterface):
                 luggage_small=row[7],
                 engine=row[8],
                 fuel=row[9],
+                status=row[10],
                 car_rental_terms=car_rental_terms
             )
             car_list.append(car)

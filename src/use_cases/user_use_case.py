@@ -122,3 +122,22 @@ class UserUseCase:
         """
         with self.transaction_mngr.transaction_scope() as cursor:
             return self.car_repo.update(cursor, req)
+
+    def delete_car_info(self, req: dict):
+        """
+        Delete car information
+        :param req: Request
+        :return: None
+        """
+        with self.transaction_mngr.transaction_scope() as cursor:
+            req['status'] = 'deleted'
+            return self.car_repo.delete(cursor, req)
+
+    def get_car_info(self, req: dict):
+        """
+        Get car information
+        :param req: Request
+        :return: Car
+        """
+        with self.transaction_mngr.transaction_scope() as cursor:
+            return self.car_repo.read(cursor, req['car_id'])

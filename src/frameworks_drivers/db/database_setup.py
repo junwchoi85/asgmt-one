@@ -160,6 +160,7 @@ def setup_database(transaction_manager: TransactionManager):
                     luggage_small INTEGER NOT NULL,
                     engine VARCHAR(45) NOT NULL,
                     fuel VARCHAR(45) NOT NULL,
+                    status VARCHAR(10) NOT NULL DEFAULT 'ACTIVE',
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     created_by VARCHAR(7) NOT NULL DEFAULT 'system',
                     updated_at TIMESTAMP NULL,
@@ -356,32 +357,32 @@ def setup_database(transaction_manager: TransactionManager):
             # Car data to be inserted
             car_data = [
                 ('car-002', 'Toyota Corolla / Similar', '2019 - 2023',
-                 5, 'Auto', 1, 2, '1800cc', '6.1L / 100km'),
+                 5, 'Auto', 1, 2, '1800cc', '6.1L / 100km', 'ACTIVE'),
                 ('car-003', 'Hyundai Elantra / Similar', '2018 - 2019',
-                 5, 'Auto', 2, 3, '1800cc', '6.4L / 100km'),
+                 5, 'Auto', 2, 3, '1800cc', '6.4L / 100km', 'ACTIVE'),
                 ('car-004', 'Mitsubishi ASX 2WD / Similar', '2019 - 2022',
-                 5, 'Auto', 2, 3, '2000cc', '7.6L / 100km'),
+                 5, 'Auto', 2, 3, '2000cc', '7.6L / 100km', 'ACTIVE'),
                 ('car-005', 'Nissan Xtrail AWD / Similar', '2019 - 2022',
-                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km', 'ACTIVE'),
                 ('car-006', 'Nissan X Trail 2WD / Similar', '2019 - 2022',
-                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km'),
+                 5, 'Auto', 4, 3, '2500cc', '9.6L / 100km', 'ACTIVE'),
                 ('car-007', 'Hyundai Santa Fe AWD / Similar', '2019 - 2022',
-                 5, 'Auto', 4, 3, '2500cc +', '10.6L / 100km'),
+                 5, 'Auto', 4, 3, '2500cc +', '10.6L / 100km', 'ACTIVE'),
                 ('car-008', 'Hyundai iMax / Similar', '2019',
-                 8, 'Auto', 3, 4, '2400cc', '9.5L / 100km'),
+                 8, 'Auto', 3, 4, '2400cc', '9.5L / 100km', 'ACTIVE'),
                 ('car-009', 'Toyota HiAce / Similar', '2016 - 2017',
-                 12, 'Auto', 8, 8, '3000cc', '9.2L / 100km'),
+                 12, 'Auto', 8, 8, '3000cc', '9.2L / 100km', 'ACTIVE'),
                 ('car-010', 'Mitsubishi Triton 4WD', '2021 - 2022',
-                 5, 'Auto', 3, 2, '2400cc', '9.8L / 100km'),
+                 5, 'Auto', 3, 2, '2400cc', '9.8L / 100km', 'ACTIVE'),
                 ('car-011', 'Hyundai Staria', '2020 - 2022', 2, 'Auto',
-                 '4.9 cubic meter cargo', 0, '2200cc', '8.2L / 100km')
+                 '4.9 cubic meter cargo', 0, '2200cc', '8.2L / 100km', 'ACTIVE')
             ]
 
             # Insert car data into the database
             for car in car_data:
                 c.execute('''
-                    INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel, created_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'system')
+                    INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel, status, created_by)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'system')
                     ''', car)
 
             # Car detail data to be inserted

@@ -60,6 +60,9 @@ def update_car_info(ctx):
 
     if is_success(res.statusCode):
         click.echo('Car information updated successfully')
+        ctx.invoke(ctx.parent.command)
     else:
         click.echo('Failed to update car information')
         click.echo(res.message)
+        click.pause(info='Press any key to continue...')
+        ctx.invoke(ctx.parent.command)

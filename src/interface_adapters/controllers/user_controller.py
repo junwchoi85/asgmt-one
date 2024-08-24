@@ -55,3 +55,18 @@ class UserController:
                 status_code=constants.STATUS_FAILURE,
                 message=constants.MESSAGE_CAR_NOT_FOUND
             ).to_dict()
+
+    def delete_car_info(self, req: dict):
+
+        result = self.user_use_case.delete_car_info(req)
+
+        if result:
+            return Response(
+                status_code=constants.STATUS_SUCCESS,
+                message=constants.MESSAGE_CAR_DELETE_SUCCESS
+            ).to_dict()
+        else:
+            return Response(
+                status_code=constants.STATUS_FAILURE,
+                message=constants.MESSAGE_CAR_NOT_FOUND
+            ).to_dict()
