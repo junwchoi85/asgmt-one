@@ -141,3 +141,16 @@ class UserUseCase:
         """
         with self.transaction_mngr.transaction_scope() as cursor:
             return self.car_repo.read(cursor, req['car_id'])
+
+    def add_car_info(self, req: dict):
+        """
+        Add car information
+        :param req: Request
+        :return: None
+        """
+        with self.transaction_mngr.transaction_scope() as cursor:
+            if 'car_code' not in req:
+                car_code = self.car_repo.create_car_code(cursor)
+                req['car_code'] = car_code
+
+            return self.car_repo.create(cursor, req)

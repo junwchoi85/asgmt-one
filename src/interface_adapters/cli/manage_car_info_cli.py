@@ -1,5 +1,6 @@
 import click
 
+from interface_adapters.cli.add_car_cli import add_car_info
 from interface_adapters.cli.delete_car_cli import delete_car_info
 from interface_adapters.cli.update_car_cli import update_car_info
 
@@ -23,7 +24,7 @@ def manage_car_info(ctx):
     if option == 1:
         ctx.invoke(view_car_list)
     elif option == 2:
-        ctx.invoke(add_car)
+        ctx.invoke(add_car_info)
     elif option == 3:
         ctx.invoke(update_car_info)
     elif option == 4:

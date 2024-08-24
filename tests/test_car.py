@@ -73,3 +73,27 @@ def test_delete_car(user_repo,
     result = user_use_case.get_car_info(req)
     assert type(result) is Car
     assert result.status == 'deleted'
+
+
+def test_create_carr(user_repo,
+                     booking_repo,
+                     car_repo,
+                     transaction_manager, test_logger):
+    user_use_case = UserUseCase(
+        user_repo, booking_repo, car_repo, transaction_manager)
+
+    req = {
+        'car_code': 'test',
+        'name': 'Test Car',
+        'year': '2021',
+        'passenger': 4,
+        'transmission': 'Automatic',
+        'luggage_large': 2,
+        'luggage_small': 1,
+        'engine': 'V6',
+        'fuel': 'Gasoline',
+        'status': 'inactive'
+    }
+
+    result = user_use_case.add_car_info(req)
+    assert result is not None

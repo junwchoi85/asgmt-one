@@ -12,8 +12,44 @@ class CarRepository(RepositoryInterface):
         self.connection = transaction_mngr.transaction_scope()
         self.logger = get_app_logger()
 
-    def create(self, cursor, car: Car) -> int:
-        pass
+    def create_car_code(self, cursor) -> str:
+        # car_code = 'car-011'
+        cursor.execute(
+            '''
+            SELECT MAX(car_code) FROM car
+            '''
+        )
+        row = cursor.fetchone()
+        if row is None:
+            return 'car-001'
+        car_code = row[0]
+        if car_code is None:
+            return 'car-001'
+        car_code = car_code.split('-')
+        car_code = int(car_code[1]) + 1
+        return f'car-{car_code:03}'
+
+    def create(self, cursor, req: dict) -> int:
+        """
+        insert car info
+        return car_id
+        """
+        return cursor.execute(
+            '''
+            INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                req['car_code'],
+                req['name'],
+                req['year'],
+                req['passenger'],
+                req['transmission'],
+                req['luggage_large'],
+                req['luggage_small'],
+                req['engine'],
+                req['fuel']
+            )
+        )
 
     def read(self, cursor, id: int) -> Optional[Car]:
         """
