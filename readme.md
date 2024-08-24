@@ -2,10 +2,9 @@
 
 ## Project Description
 
-This project is a Python-based application developed for the first assignment of the MSE800 Software Engineering course at Yoobee College. The application utilizes a command-line interface (CLI) for user interaction. It aims to demonstrate the understanding and application of software engineering principles and practices.
+This project is a Python-based application developed as part of the MSE800 Software Engineering course at Yoobee College. It features a command-line interface (CLI) for user interaction, designed to demonstrate the application of key software engineering principles and practices.
 
-The project showcases the utilization of Python programming language and its libraries, incorporating various features and functionalities. It offers a user-friendly CLI interface for seamless user interaction, enabling them to perform specific tasks and obtain desired outputs. The developer also applied object-oriented programming (OOP) concepts and implemented Clean Architecture for the project's structure. Furthermore, pytest was utilized for use case testing, while SQLite3 was chosen for efficient and convenient local development experience.
-
+The project highlights the use of Python and its libraries to implement a user-friendly CLI that allows users to perform specific tasks efficiently. Object-oriented programming (OOP) principles are applied throughout, and the project architecture follows the Clean Architecture pattern to ensure modularity and maintainability. The testing framework pytest was used for validating use cases, and SQLite3 was chosen to provide a simple and effective database solution for local development.
 
 
 ## Table of Contents
@@ -45,8 +44,6 @@ To install this project, follow these steps:
     ```
     make run
     ```
-
-6. Access the project in your web browser at `http://localhost:3000`.
 
 Enjoy using the project!
 
