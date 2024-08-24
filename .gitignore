@@ -4,3 +4,7 @@ venv/
 mseboo.db
 logs/*
 *.sql
+build/*
+dist/*
+*.DS_Store
+main.spec
