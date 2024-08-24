@@ -27,7 +27,7 @@ def user_main_menu(ctx):
     elif choice == 2:
         ctx.invoke(manage_booking)
     elif choice == 3:
-        click.echo('Manage Customer')
+        click.echo('To be implemented')
     elif choice == 4:
         click.echo('Sign out')
         click.echo('Bye bye!')
