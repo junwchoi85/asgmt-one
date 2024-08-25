@@ -1,5 +1,6 @@
 import sqlite3
 
+from frameworks_drivers.db.database_setup import setup_database
 from interface_adapters.cli import greeting_cli
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.controllers.car_controller import CarController
@@ -54,6 +55,8 @@ def rental_controller(transaction_manager: TransactionManager):
 def main():
     # Create database connectionㄱ
     transaction_manager = TransactionManager(DB_FILE)
+    # Run datebase setup
+    setup_database(transaction_manager)
 
     # Create controllers
     user_controller = create_user_controller(transaction_manager)

@@ -1,6 +1,8 @@
 import sqlite3
 from contextlib import contextmanager
 
+from utils.logger import get_db_logger
+
 
 class TransactionManager:
     def __init__(self, db_path: str):
@@ -11,11 +13,12 @@ class TransactionManager:
             db_path (str): The path to the database file.
         """
         self.connection = sqlite3.connect(db_path)
+        self.logger = get_db_logger()
 
     @contextmanager
     def transaction_scope(self):
+        cursor = self.connection.cursor()
         try:
-            cursor = self.connection.cursor()
             yield cursor
             self.connection.commit()
         except sqlite3.IntegrityError as e:
@@ -32,6 +35,13 @@ class TransactionManager:
             raise RuntimeError(f"Error occurred: {e}")
         finally:
             cursor.close()
+
+    def log_query(self, query, params):
+        self.logger.debug(f"Executing query: {query} with params: {params}")
+
+    def execute(self, cursor, query, params):
+        self.log_query(query, params)
+        cursor.execute(query, params)
 
     def close_connection(self):
         """

@@ -4,6 +4,7 @@ from entities.booking import Booking
 from entities.car import Car
 from interface_adapters.response import Response
 from use_cases.user_use_case import UserUseCase
+import constants.cli_constants as constants
 
 
 class UserController:
@@ -14,9 +15,19 @@ class UserController:
         if not req.get('username') or not req.get('password'):
             raise ValueError('Username and password are required')
 
-        user = self.user_use_case.sign_in(req)
+        try:
+            user = self.user_use_case.sign_in(req)
+        except ValueError as e:
+            return Response(
+                status_code=constants.STATUS_FAILURE,
+                message=constants.MSSSAGE_USER_SIGN_IN_FAILURE
+            ).to_dict()
         if user:
-            return {"status": "success", "user": user}
+            return Response(
+                status_code=constants.STATUS_SUCCESS,
+                message=constants.MESSAGE_USER_SIGN_IN_SUCCESS,
+                data=user
+            ).to_dict()
         else:
             return {"status": "failure", "message": "Invalid credentials"}
 

@@ -1,5 +1,6 @@
 import click
 from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.cli_util import is_success
 from interface_adapters.cli.user_main_menu_cli import user_main_menu
 
 
@@ -21,9 +22,9 @@ def signIn(ctx, username, password):
         'username': username,
         'password': password
     }
-    result = user_controller.sign_in(req)
+    res = user_controller.sign_in(req)
 
-    if result:
+    if is_success(res):
         click.echo('Sign in successful')
         ctx.obj['username'] = username
         ctx.invoke(user_main_menu)

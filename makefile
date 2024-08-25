@@ -54,9 +54,26 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 	find . -type f -name '*.db' -delete
+	rm -rf dist
+	rm -rf build
+	rm main.exe.spec
 	@echo "Cleanup complete."
 
 # 가상환경을 활성화하고 main.py를 실행하는 규칙
 .PHONY: run
 run:
 	PYTHONPATH=$(shell pwd)/src $(PYTHON) src/main.py
+
+# 프로젝트 패키징
+.PHONY: package
+package: install
+	@echo "Packaging project..."
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --onefile src/main.py
+	@echo "Project packaged."
+
+# Windows용 실행 파일 생성
+.PHONY: package_win
+package_win: install
+	@echo "Packaging project for Windows..."
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --onefile --windowed --name main.exe src/main.py
+	@echo "Windows executable packaged."

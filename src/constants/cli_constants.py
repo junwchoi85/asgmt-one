@@ -23,3 +23,6 @@ MESSAGE_CAR_UPDATE_SUCCESS = "Car information updated successfully"
 MESSAGE_CAR_DELETE_SUCCESS = "Car information deleted successfully"
 MESSAGE_CAR_ADD_SUCCESS = "Car information added successfully"
 MESSAGE_CAR_ADD_FAILURE = "Failed to add car information"
+
+MSSSAGE_USER_SIGN_IN_FAILURE = "Invalid credentials"
+MESSAGE_USER_SIGN_IN_SUCCESS = "Sign in successful"

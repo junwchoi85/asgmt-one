@@ -6,7 +6,8 @@ from interface_adapters.repositories.repository_interface import RepositoryInter
 
 class UserRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
-        self.connection = transaction_mngr.transaction_scope()
+        # self.connection = transaction_mngr.transaction_scope()
+        self.transaction_mngr = transaction_mngr
 
     def create(self, cursor, user: User) -> int:
         """
@@ -20,13 +21,14 @@ class UserRepository(RepositoryInterface):
         return cursor.lastrowid
 
     def read(self, cursor, id: int) -> Optional[dict]:
-        cursor.execute(
-            '''
-            SELECT * FROM user WHERE cst_id = ?
-            ''',
-            (id,))
-        row = cursor.fetchone()
-        return dict(row) if row else None
+        # cursor.execute(
+        #     '''
+        #     SELECT * FROM user WHERE cst_id = ?
+        #     ''',
+        #     (id,))
+        # row = cursor.fetchone()
+        # return dict(row) if row else None
+        pass
 
     def update(self, cursor, entity) -> bool:
         pass
@@ -35,11 +37,14 @@ class UserRepository(RepositoryInterface):
         pass
 
     def find_by_username(self, cursor, username: str) -> User:
-        cursor.execute(
-            '''
+        """
+        Find a user by username.
+        """
+        query = '''
             SELECT * FROM user WHERE username = ?
-            ''',
-            (username,))
+            '''
+        params = (username,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
         if row:
             user_id, user_code, username, password, created_at, created_by, updated_at, updated_by = row
