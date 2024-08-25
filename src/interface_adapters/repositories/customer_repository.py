@@ -6,15 +6,16 @@ from interface_adapters.repositories.repository_interface import RepositoryInter
 
 class CustomerRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
-        self.connection = transaction_mngr.transaction_scope()
+        # self.connection = transaction_mngr.transaction_scope()
+        self.transaction_mngr = transaction_mngr
 
     def create(self, cursor, customer: Customer) -> int:
-        cursor.execute(
-            '''
+        query = '''
             INSERT INTO customer (cst_code, username, password)
             VALUES (?, ?, ?)
-            ''',
-            (customer.cst_code, customer.username, customer.password))
+            '''
+        params = (customer.cst_code, customer.username, customer.password)
+        self.transaction_mngr.execute(cursor, query, params)
         return cursor.lastrowid
 
     def read(self, cursor, id: int) -> Optional[dict]:
@@ -56,11 +57,11 @@ class CustomerRepository(RepositoryInterface):
         :param username: Username
         :return: Customer object
         """
-        cursor.execute(
-            '''
+        query = '''
             SELECT * FROM customer WHERE username = ?
-            ''',
-            (username,))
+            '''
+        params = (username,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
         if row:
             cst_id, cst_code, username, password, created_at, created_by, updated_at, updated_by = row

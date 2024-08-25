@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from frameworks_drivers.db.database_setup import setup_database
@@ -55,8 +56,16 @@ def rental_controller(transaction_manager: TransactionManager):
 def main():
     # Create database connectionㄱ
     transaction_manager = TransactionManager(DB_FILE)
-    # Run datebase setup
-    setup_database(transaction_manager)
+
+    # 플래그 파일 경로
+    flag_file = 'db_setup_done.flag'
+
+    # 플래그 파일이 존재하지 않으면 데이터베이스 설정 실행
+    if not os.path.exists(flag_file):
+        setup_database(transaction_manager)
+        # 플래그 파일 생성
+        with open(flag_file, 'w') as f:
+            f.write('Database setup completed.')
 
     # Create controllers
     user_controller = create_user_controller(transaction_manager)
