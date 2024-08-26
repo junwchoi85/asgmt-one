@@ -19,11 +19,11 @@ class CustomerRepository(RepositoryInterface):
         return cursor.lastrowid
 
     def read(self, cursor, id: int) -> Optional[dict]:
-        cursor.execute(
-            '''
+        query = '''
             SELECT * FROM customer WHERE cst_id = ?
-            ''',
-            (id,))
+            '''
+        params = (id,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
         return dict(row) if row else None
 
@@ -40,10 +40,11 @@ class CustomerRepository(RepositoryInterface):
         Generate customer code
         :return: Customer code
         """
-        cursor.execute(
-            '''
+        qurery = '''
             SELECT cst_code FROM customer ORDER BY cst_id DESC LIMIT 1
-            ''')
+            '''
+        params = ()
+        self.transaction_mngr.execute(cursor, qurery, params)
         row = cursor.fetchone()
 
         if row:

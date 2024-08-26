@@ -10,15 +10,16 @@ from utils.logger import get_app_logger
 class CarRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
         self.connection = transaction_mngr.transaction_scope()
-        self.logger = get_app_logger()
+        self.transaction_mngr = transaction_mngr
+        # self.logger = get_app_logger()
 
     def create_car_code(self, cursor) -> str:
         # car_code = 'car-011'
-        cursor.execute(
-            '''
+        query = '''
             SELECT MAX(car_code) FROM car
             '''
-        )
+        params = ()
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
         if row is None:
             return 'car-001'
@@ -34,49 +35,51 @@ class CarRepository(RepositoryInterface):
         insert car info
         return car_id
         """
-        return cursor.execute(
-            '''
+        query = '''
             INSERT INTO car (car_code, name, year, passenger, transmission, luggage_large, luggage_small, engine, fuel)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                req['car_code'],
-                req['name'],
-                req['year'],
-                req['passenger'],
-                req['transmission'],
-                req['luggage_large'],
-                req['luggage_small'],
-                req['engine'],
-                req['fuel']
-            )
+            '''
+        params = (
+            req['car_code'],
+            req['name'],
+            req['year'],
+            req['passenger'],
+            req['transmission'],
+            req['luggage_large'],
+            req['luggage_small'],
+            req['engine'],
+            req['fuel']
         )
+        self.transaction_mngr.execute(cursor, query, params)
+        return cursor.lastrowid
 
     def read(self, cursor, id: int) -> Optional[Car]:
         """
         select car by id
         return car info
         """
-        cursor.execute(
-            '''
+        query = '''
             SELECT * FROM car
             WHERE car_id = ?
-            ''', (id,))
+            '''
+        params = (id,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
-        if row is None:
-            return None
-        return Car(
-            car_id=row[0],
-            car_code=row[1],
-            name=row[2],
-            year=row[3],
-            passenger=row[4],
-            transmission=row[5],
-            luggage_large=row[6],
-            luggage_small=row[7],
-            engine=row[8],
-            fuel=row[9],
-            status=row[10]
-        )
+        if row:
+            return Car(
+                car_id=row[0],
+                car_code=row[1],
+                name=row[2],
+                year=row[3],
+                passenger=row[4],
+                transmission=row[5],
+                luggage_large=row[6],
+                luggage_small=row[7],
+                engine=row[8],
+                fuel=row[9],
+                status=row[10]
+            )
+        return None
 
     def update(self, cursor, req: dict) -> bool:
         query, query_params = self._build_car_update_query(req)
@@ -125,37 +128,37 @@ class CarRepository(RepositoryInterface):
         query += ' WHERE car_id = ?'
         query_params.append(req['car_id'])
         # Build query ends
-        self.logger.debug(query)
-        self.logger.debug(query_params)
-        self.logger.debug('Update car info query built successfully')
+        # self.logger.debug(query)
+        # self.logger.debug(query_params)
+        # self.logger.debug('Update car info query built successfully')
         return query, query_params
 
     def find_by_car_code(self, cursor, car_code: str) -> Optional[Car]:
-        cursor.execute(
-            '''
+        query = '''
             SELECT * FROM car
             WHERE car_code = ?
-            ''', (car_code,))
+            '''
+        params = (car_code,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
-        if row is None:
-            return None
-        return Car(
-            car_id=row[0],
-            car_code=row[1],
-            name=row[2],
-            year=row[3],
-            passenger=row[4],
-            transmission=row[5],
-            luggage_large=row[6],
-            luggage_small=row[7],
-            engine=row[8],
-            fuel=row[9],
-            status=row[10]
-        )
+        if row:
+            return Car(
+                car_id=row[0],
+                car_code=row[1],
+                name=row[2],
+                year=row[3],
+                passenger=row[4],
+                transmission=row[5],
+                luggage_large=row[6],
+                luggage_small=row[7],
+                engine=row[8],
+                fuel=row[9],
+                status=row[10]
+            )
+        return None
 
     def get_car_list(self, cursor) -> list[Car]:
-        cursor.execute(
-            '''
+        query = '''
             SELECT 
                 car.car_id,
                 car.car_code,
@@ -173,7 +176,10 @@ class CarRepository(RepositoryInterface):
                 car car,
                 car_rental_terms crt
             where car.CAR_id = crt.car_id
-            ''')
+            '''
+        params = ()
+        self.transaction_mngr.execute(cursor, query, params)
+
         rows = cursor.fetchall()
         # print(rows)
         car_list = []
@@ -201,8 +207,7 @@ class CarRepository(RepositoryInterface):
 
     def get_car_list_paged(self, cursor, page: int, page_size: int) -> list[Car]:
         offset = (page - 1) * page_size
-        cursor.execute(
-            '''
+        query = '''
             SELECT 
                 car.car_id,
                 car.car_code,
@@ -222,8 +227,11 @@ class CarRepository(RepositoryInterface):
             where car.CAR_id = crt.car_id
             and car.status = 'ACTIVE'
             LIMIT ? OFFSET ?
-            ''', (page_size, offset))
+        '''
+        params = (page_size, offset)
+        self.transaction_mngr.execute(cursor, query, params)
         rows = cursor.fetchall()
+
         car_list = []
         for row in rows:
             car_rental_terms = CarRentalTerms(
@@ -252,15 +260,17 @@ class CarRepository(RepositoryInterface):
     def select_car_detail(self, cursor, req: dict) -> CarDetail:
         car_id = req['car_id']
 
-        cursor.execute(
-            '''
+        query = '''
             SELECT * FROM car_detail
             WHERE car_id = ?
             AND status = 'Available'
             ORDER BY RANDOM()
             LIMIT 1
-            ''', (car_id,))
+            '''
+        params = (car_id,)
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
+
         car_detail = CarDetail(
             car_dtl_id=row[0],
             car_id=row[1],

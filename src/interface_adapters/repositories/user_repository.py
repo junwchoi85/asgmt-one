@@ -13,11 +13,11 @@ class UserRepository(RepositoryInterface):
         """
         Create a new user.
         """
-        cursor.execute(
-            '''
+        query = '''
             INSERT INTO user (user_code, username, password) VALUES (?, ?, ?)
-            ''',
-            (user.user_code, user.username, user.password))
+            '''
+        params = (user.user_code, user.username, user.password)
+        self.transaction_mngr.execute(cursor, query, params)
         return cursor.lastrowid
 
     def read(self, cursor, id: int) -> Optional[dict]:
@@ -52,10 +52,11 @@ class UserRepository(RepositoryInterface):
         return None
 
     def fetch_latest_user_code(self, cursor) -> str:
-        cursor.execute(
-            '''
+        query = '''
             SELECT user_code FROM user ORDER BY user_id DESC LIMIT 1
-            ''')
+            '''
+        params = ()
+        self.transaction_mngr.execute(cursor, query, params)
         row = cursor.fetchone()
 
         if row:

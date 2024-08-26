@@ -3,13 +3,13 @@ from entities.booking import Booking
 from entities.booking_detail import BookingDetail
 from frameworks_drivers.db.transaction_manager import TransactionManager
 from interface_adapters.repositories.repository_interface import RepositoryInterface
-from utils.logger import get_app_logger
+# from utils.logger import get_app_logger
 
 
 class BookingRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
-        self.connection = transaction_mngr.transaction_scope()
-        self.logger = get_app_logger()
+        # self.connection = transaction_mngr.transaction_scope()
+        self.transaction_mngr = transaction_mngr
 
     def create(self, cursor, booking: Booking) -> int:
         pass
@@ -24,20 +24,21 @@ class BookingRepository(RepositoryInterface):
         pass
 
     def book_car(self, cursor,  req: dict) -> int:
-        cursor.execute(
-            '''
+        query = '''
             INSERT INTO booking (cst_id, car_dtl_id, start_date, end_date, total_fee, status)
             VALUES (?, ?, ?, ?, ?, ?)
-            ''',
-            (req['cst_id'], req['car_dtl_id'], req['start_date'], req['end_date'], req['total_fee'], req['status']))
+            '''
+        params = (req['cst_id'], req['car_dtl_id'], req['start_date'],
+                  req['end_date'], req['total_fee'], req['status'])
+        self.transaction_mngr.execute(cursor, query, params)
         return cursor.lastrowid
 
     def get_booking_list(self, cursor, req: dict) -> list[Booking]:
         # build query
         query, query_params = self._build_selection_query(req)
-        self.logger.debug(f'query: {query}, query_params: {query_params}')
+        self.transaction_mngr.log_query(query, query_params)
 
-        cursor.execute(query, query_params)
+        # cursor.execute(query, query_params)
 
         rows = cursor.fetchall()
         booking_list = []
@@ -55,15 +56,13 @@ class BookingRepository(RepositoryInterface):
         return booking_list
 
     def update_booking_status(self, cursor, req: dict) -> bool:
-        cursor.execute(
-            '''
+        query = '''
             UPDATE booking
             SET status = ?
             WHERE booking_id = ?
-            ''',
-            (req['status'], req['booking_id'])
-        )
-        return True
+            '''
+        params = (req['status'], req['booking_id'])
+        return self.transaction_mngr.execute(cursor, query, params)
 
     def _build_selection_query(self, req: dict) -> tuple:
         query = 'SELECT * FROM booking'
@@ -98,29 +97,28 @@ class BookingRepository(RepositoryInterface):
         return query, query_params
 
     def get_booking_detail_list(self, cursor, req: dict):
-
-        cursor.execute(
-            '''
-            SELECT  c.car_code, 
-                    c.name, 
-                    c.year, 
-                    c.passenger, 
-                    c.transmission, 
-                    c.luggage_large, 
-                    c.luggage_small, 
-                    c.engine, 
-                    c.fuel, 
+        query = '''
+            SELECT  c.car_code,
+                    c.name,
+                    c.year,
+                    c.passenger,
+                    c.transmission,
+                    c.luggage_large,
+                    c.luggage_small,
+                    c.engine,
+                    c.fuel,
                     b.start_date,
-                    b.end_date, 
+                    b.end_date,
                     b.total_fee,
                     b.status
             FROM car c
             JOIN car_detail cd ON c.car_id = cd.car_id
             JOIN booking b ON cd.car_dtl_id = b.car_dtl_id
             WHERE b.cst_id = ?
-            ''',
-            (req['cst_id'],)
-        )
+            '''
+        params = (req['cst_id'],)
+        self.transaction_mngr.execute(cursor, query, params)
+
         rows = cursor.fetchall()
         booking_detail_list = []
         for row in rows:

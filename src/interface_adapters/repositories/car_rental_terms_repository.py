@@ -6,7 +6,8 @@ from interface_adapters.repositories.repository_interface import RepositoryInter
 
 class CarRentalTermsRepository(RepositoryInterface):
     def __init__(self, transaction_mngr: TransactionManager):
-        self.connection = transaction_mngr.transaction_scope()
+        # self.connection = transaction_mngr.transaction_scope()
+        self.transaction_mngr = transaction_mngr
 
     def create(self, car: CarRentalTerms) -> int:
         pass
@@ -22,12 +23,11 @@ class CarRentalTermsRepository(RepositoryInterface):
 
     # car rental terms section
     # TODO : Consider moving this to a separate repository
-    def get_rental_terms(self, req: dict) -> CarRentalTerms:
+    def get_rental_terms(self, cursor, req: dict) -> CarRentalTerms:
 
         query, query_params = self._build_query(req)
+        self.transaction_mngr.execute(query, query_params)
 
-        cursor = self.connection.cursor()
-        cursor.execute(query, query_params)
         row = cursor.fetchone()
         car_rental_terms = CarRentalTerms(
             car_rtr_id=row[0],
