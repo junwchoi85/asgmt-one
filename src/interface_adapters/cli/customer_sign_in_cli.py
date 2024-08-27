@@ -1,21 +1,20 @@
-import click
-from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.cli_util import is_success
 from interface_adapters.cli.customer_main_menu_cli import customer_main_menu
 
 
-@click.command()
-@click.pass_context
-@click.option('--username', prompt='Your username', help='The user name')
-@click.option('--password', prompt='Your password', help='The password')
-def customer_sign_in(ctx, username, password):
+def customer_sign_in(controllers: dict, cli: Cli):
     """ Sign In cli """
-    clear_screen()
-    # click.echo('Sign In')
+    cli.clear_screen()
 
-    customer_controller = ctx.obj['customer_controller']
+    cli.echo('Sign In. Please enter your credentials')
+    username = cli.prompt('Username: ')
+    password = cli.prompt('Password: ')
+
+    customer_controller = controllers['customer_controller']
+
     if not username or not password:
-        click.echo('Username and password are required')
+        cli.echo('Username and password are required')
         return
     req = {
         'username': username,
@@ -26,10 +25,14 @@ def customer_sign_in(ctx, username, password):
     res = customer_controller.sign_in(req)
 
     if is_success(res):
-        click.echo('Sign in successful')
-        customer_main_menu(obj={'username': username,
-                                'customer_controller': customer_controller})
+        cli.echo('Sign in successful')
+
+        credentials = {
+            'username': username,
+            # 'password': password
+        }
+        customer_main_menu(controllers, credentials, cli)
     else:
-        click.echo(res['message'])
-        click.pause('Bye bye!')
+        cli.echo(res['message'])
+        cli.exit()
         return

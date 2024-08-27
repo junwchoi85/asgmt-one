@@ -4,6 +4,7 @@ import sqlite3
 from frameworks_drivers.db.database_setup import setup_database
 from interface_adapters.cli import greeting_cli
 from frameworks_drivers.db.transaction_manager import TransactionManager
+from interface_adapters.cli.cli import Cli
 from interface_adapters.controllers.car_controller import CarController
 from interface_adapters.controllers.customer_controller import CustomerController
 from interface_adapters.repositories.booking_repository import BookingRepository
@@ -57,13 +58,13 @@ def main():
     # Create database connectionㄱ
     transaction_manager = TransactionManager(DB_FILE)
 
-    # 플래그 파일 경로
+    # Flag file to check if database setup has been done
     flag_file = 'db_setup_done.flag'
 
-    # 플래그 파일이 존재하지 않으면 데이터베이스 설정 실행
+    # if flag file does not exist, setup the database
     if not os.path.exists(flag_file):
         setup_database(transaction_manager)
-        # 플래그 파일 생성
+        # create flag file
         with open(flag_file, 'w') as f:
             f.write('Database setup completed.')
 
@@ -73,10 +74,15 @@ def main():
     car_controller = create_car_controller(transaction_manager)
     rental_controller(transaction_manager)
 
+    controllers = {
+        'user_controller': user_controller,
+        'customer_controller': customer_controller,
+        'car_controller': car_controller
+    }
+
+    cli = Cli()
     # The central hub for starting the application.
-    greeting_cli.greet(obj={'user_controller': user_controller,
-                            'customer_controller': customer_controller,
-                            'car_controller': car_controller})
+    greeting_cli.greet(controllers, cli)
 
 
 if __name__ == '__main__':

@@ -1,40 +1,37 @@
-import click
-
+from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.cli_util import is_success
 
 
-@click.command()
-@click.pass_context
-def add_car_info(ctx):
-    user_controller = ctx.obj['user_controller']
+def add_car_info(controllers: dict, credentials: dict, cli: Cli):
+    user_controller = controllers['user_controller']
 
-    click.echo('Add Car Information')
+    cli.echo('Add Car Information')
 
     while True:
-        click.echo('Please enter the information below:')
+        cli.echo('Please enter the information below:')
 
-        name = click.prompt('Name')
-        year = click.prompt('Year', type=int)
-        passenger = click.prompt('Passenger', type=int)
-        transmission = click.prompt('Transmission')
-        luggage_large = click.prompt('Luggage Large', type=int)
-        luggage_small = click.prompt('Luggage Small', type=int)
-        engine = click.prompt('Engine')
-        fuel = click.prompt('Fuel')
-        price_per_day = click.prompt('Price per day', type=float)
+        name = cli.prompt('Name')
+        year = cli.prompt('Year', type_=int)
+        passenger = cli.prompt('Passenger', type_=int)
+        transmission = cli.prompt('Transmission')
+        luggage_large = cli.prompt('Luggage Large', type_=int)
+        luggage_small = cli.prompt('Luggage Small', type_=int)
+        engine = cli.prompt('Engine')
+        fuel = cli.prompt('Fuel')
+        price_per_day = cli.prompt('Price per day', type_=float)
 
-        click.echo('\nPlease confirm the information below:')
-        click.echo(f'Name: {name}')
-        click.echo(f'Year: {year}')
-        click.echo(f'Passenger: {passenger}')
-        click.echo(f'Transmission: {transmission}')
-        click.echo(f'Luggage Large: {luggage_large}')
-        click.echo(f'Luggage Small: {luggage_small}')
-        click.echo(f'Engine: {engine}')
-        click.echo(f'Fuel: {fuel}')
-        click.echo(f'Price per day: {price_per_day}')
+        cli.echo('\nPlease confirm the information below:')
+        cli.echo(f'Name: {name}')
+        cli.echo(f'Year: {year}')
+        cli.echo(f'Passenger: {passenger}')
+        cli.echo(f'Transmission: {transmission}')
+        cli.echo(f'Luggage Large: {luggage_large}')
+        cli.echo(f'Luggage Small: {luggage_small}')
+        cli.echo(f'Engine: {engine}')
+        cli.echo(f'Fuel: {fuel}')
+        cli.echo(f'Price per day: {price_per_day}')
 
-        confirm = click.prompt('Is the information correct? (y/n)', type=str)
+        confirm = cli.prompt('Is the information correct? (y/n)', type_=str)
         if confirm.lower() == 'y' or confirm.lower() == 'yes':
             break
 
@@ -53,11 +50,11 @@ def add_car_info(ctx):
     res = user_controller.add_car_info(req)
 
     if is_success(res):
-        click.echo('Car added successfully')
-        click.pause(info='Press any key to continue...')
-        ctx.invoke(ctx.parent.command)
+        cli.echo('Car added successfully')
+        cli.pause(info='Press any key to continue...')
+        return
     else:
-        click.echo('Failed to add car')
-        click.echo(res['message'])
-        click.pause(info='Press any key to continue...')
-        ctx.invoke(ctx.parent.command)
+        cli.echo('Failed to add car')
+        cli.echo(res['message'])
+        cli.pause(info='Press any key to continue...')
+        return

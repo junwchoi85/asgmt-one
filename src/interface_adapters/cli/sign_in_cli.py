@@ -1,35 +1,36 @@
-import click
-from interface_adapters.cli.clear_screen_cli import clear_screen
+from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.cli_util import is_success
 from interface_adapters.cli.user_main_menu_cli import user_main_menu
 
 
-@click.command()
-@click.pass_context
-@click.option('--username', prompt='Your username', help='The user name')
-@click.option('--password', prompt='Your password', help='The password')
-def signIn(ctx, username, password):
+def signIn(controllers: dict, cli: Cli):
     """ Sign In """
     # TODO : encrypt password
-    clear_screen()
-    click.echo('Sign In')
+    cli.clear_screen()
+    cli.echo('Admin sign In. Please enter your credentials')
+    username = cli.prompt('Admin Username: ')
+    password = cli.prompt('Admin Password: ')
 
-    user_controller = ctx.obj['user_controller']
+    user_controller = controllers['user_controller']
     if not username or not password:
-        click.echo('Username and password are required')
+        cli.echo('Username and password are required')
         return
     req = {
         'username': username,
         'password': password
     }
+
     res = user_controller.sign_in(req)
 
     if is_success(res):
-        click.echo('Sign in successful')
-        ctx.obj['username'] = username
-        ctx.invoke(user_main_menu)
-        # user_main_menu(obj={'username': username})
+        cli.echo('Sign in successful')
+        credentials = {
+            'username': username,
+            # 'password': password
+        }
+        user_main_menu(controllers, credentials, cli)
+
     else:
-        # TODO : Should go back to the main menu?
-        click.echo('Invalid Username or Password')
-        exit()
+        cli.echo(res['message'])
+        cli.exit()
+        return

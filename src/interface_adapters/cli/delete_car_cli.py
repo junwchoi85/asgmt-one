@@ -1,17 +1,15 @@
-import click
 
+from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.cli_util import is_success
 
 
-@click.command()
-@click.pass_context
-def delete_car_info(ctx):
-    car = ctx.obj['car']
+def delete_car_info(user_controller, selected_car, cli: Cli):
+    car = selected_car
     user_controller = ctx.obj['user_controller']
-    click.echo('Delete Car Information')
-    click.echo(f'Current Car Information: {car}')
+    cli.echo('Delete Car Information')
+    cli.echo(f'Current Car Information: {car}')
 
-    option = click.prompt('Are you sure you want to delete this car? (y/n)')
+    option = cli.prompt('Are you sure you want to delete this car? (y/n)')
 
     if option.lower() == 'y' or option.lower() == 'yes':
         req = {
@@ -20,12 +18,12 @@ def delete_car_info(ctx):
 
         res = user_controller.delete_car_info(req)
         if is_success(res):
-            click.echo('Car deleted successfully')
-            ctx.invoke(ctx.parent.command)
+            cli.echo('Car deleted successfully')
+            return
         else:
-            click.echo('Failed to delete car')
-            click.echo(res['message'])
-            click.pause(info='Press any key to continue...')
-            ctx.invoke(ctx.parent.command)
+            cli.echo('Failed to delete car')
+            cli.echo(res['message'])
+            cli.pause(info='Press any key to continue...')
+            return
     else:
-        click.echo('Car deletion cancelled')
+        cli.echo('Car deletion cancelled')

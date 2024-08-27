@@ -1,34 +1,30 @@
-import click
-
+from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.manage_booking_cli import manage_booking
 from interface_adapters.cli.manage_car_info_cli import manage_car_info
 
 
-@click.command()
-@click.pass_context
-def user_main_menu(ctx):
-    # ctx로 유저 정보를 받아온다.
+def user_main_menu(controllers: dict, credentials: dict, cli: Cli):
+    cli.clear_screen()
 
-    username = ctx.obj['username']
+    username = credentials['username']
 
     """ User Main Menu """
-    click.echo(f'Hello {username}, welcome to the MSE800 Car Rental System!')
-    click.echo('Please choose an option from the menu below:')
-    click.echo('1. Manage Car Information')
-    click.echo('2. Manage booking')
-    click.echo('3. Manage Customer')
-    click.echo('4. Sign out')
-    choice = click.prompt('\nChoose an option', type=int)
+    cli.echo(f'Hello {username}, welcome to the MSE800 Car Rental System!')
+    cli.echo('Please choose an option from the menu below:')
+    cli.echo('1. Manage Car Information')
+    cli.echo('2. Manage booking')
+    cli.echo('3. Manage Customer')
+    cli.echo('4. Sign out')
+    choice = cli.prompt('\nChoose an option: ', type_=int)
 
     while (choice < 1 or choice > 4):
-        choice = click.prompt('Invalid option. Please try again ', type=int)
+        choice = cli.prompt('Invalid option. Please try again ', type_=int)
     if choice == 1:
-        ctx.invoke(manage_car_info)
+        manage_car_info(controllers, credentials, cli)
     elif choice == 2:
-        ctx.invoke(manage_booking)
+        manage_booking(controllers, credentials, cli)
     elif choice == 3:
-        click.echo('To be implemented')
+        cli.echo('To be implemented')
     elif choice == 4:
-        click.echo('Sign out')
-        click.echo('Bye bye!')
-        exit()
+        cli.echo('Sign out')
+        cli.exit()
