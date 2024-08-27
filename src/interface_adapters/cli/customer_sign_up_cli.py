@@ -7,8 +7,8 @@ def customer_sign_up(controllers: dict, cli: cli.Cli):
     """ Sign Up """
     cli.clear_screen()
     # cli.echo('Sign Up')
-
-    cli.echo('Sign Up. Please enter your credentials')
+    cli.echo('======= Sign Up =======')
+    cli.echo('Please enter your credentials\n')
     username = cli.prompt('Username: ')
     password = cli.prompt('Password: ')
 

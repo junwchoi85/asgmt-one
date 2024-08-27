@@ -1,13 +1,12 @@
 from interface_adapters.cli.add_car_cli import add_car_info
-from interface_adapters.cli.car_list_cli import view_car_list
 from interface_adapters.cli.cli import Cli
-from interface_adapters.cli.delete_car_cli import delete_car_info
 from interface_adapters.cli.update_car_cli import update_car_info
+from interface_adapters.cli.view_car_list_cli import view_car_list
 
 
 def manage_car_info(controllers: dict, credentials: dict, cli: Cli):
     """ Manage Car Information Menu """
-    cli.clear()
+    cli.clear_screen()
     cli.echo('Please choose an option from the menu below:')
     cli.echo('1. View Car List')
     cli.echo('2. Add Car')

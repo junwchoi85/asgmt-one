@@ -4,7 +4,7 @@ from interface_adapters.cli.update_car_cli import update_car_info
 
 
 def view_car_list(controllers: dict, credentials: dict, cli: Cli):
-    cli.clear()
+    cli.clear_screen()
     user_controller = controllers['user_controller']
 
     page = 1
@@ -33,19 +33,25 @@ def view_car_list(controllers: dict, credentials: dict, cli: Cli):
         cli.echo(
             '\nType in \'next\' to go to next page,\n or \'prev\' to go to previous page,\n or \'exit\' to exit. ')
         cli.echo('or type in the number of the car for management options.')
-        action = cli.prompt('choose action')
+        action = cli.prompt('choose action: ')
 
         if action.lower() == 'next':
-            if len(car_list) < page_size:
-                cli.echo('You are already on the final page.')
+            start = page * page_size
+            end = start + page_size
+            current_page_cars = car_list[start:end]
+
+            if len(current_page_cars) < page_size:
+                cli.pause(
+                    'You are already on the final page. Press Enter to continue...')
+                continue
             else:
                 page += 1
-            page += 1
         elif action.lower() == 'prev':
             if page > 1:
                 page -= 1
             else:
-                cli.echo('You are already on the first page.')
+                cli.pause(
+                    'You are already on the first page. Press Enter to continue...')
         elif action.lower() == 'exit':
             return
 
@@ -55,7 +61,7 @@ def view_car_list(controllers: dict, credentials: dict, cli: Cli):
             if selected_index < 0 or selected_index >= len(car_list):
                 cli.echo('Invalid car number. Please try again.')
             else:
-                cli.clear()
+                cli.clear_screen()
                 selected_car = car_list[selected_index]
                 cli.echo(
                     f'You have selected: {selected_car.name}, year: {
@@ -72,13 +78,13 @@ def view_car_list(controllers: dict, credentials: dict, cli: Cli):
                 cli.echo('1. Update Car Information')
                 cli.echo('2. Delete Car')
                 cli.echo('3. Back')
-                action = cli.prompt('choose action')
+                action = cli.prompt('choose action: ')
                 if action == '1':
-                    selected_car
                     update_car_info(user_controller, selected_car, cli)
+                    continue
                 elif action == '2':
-
                     delete_car_info(user_controller, selected_car, cli)
+                    continue
                 elif action == '3':
                     continue
                 else:

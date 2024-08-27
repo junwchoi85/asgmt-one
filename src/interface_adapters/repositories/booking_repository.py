@@ -38,7 +38,7 @@ class BookingRepository(RepositoryInterface):
         query, query_params = self._build_selection_query(req)
         self.transaction_mngr.log_query(query, query_params)
 
-        # cursor.execute(query, query_params)
+        cursor.execute(query, query_params)
 
         rows = cursor.fetchall()
         booking_list = []

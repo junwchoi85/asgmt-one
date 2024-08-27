@@ -10,9 +10,9 @@ def view_booking(controllers: dict, credentials: dict, cli: Cli):
     res = user_controller.get_booking_list(req)
     booking_list = res['booking_list']
     cli.echo('\nBooking List:')
-    for booking in booking_list:
+    for index, booking in booking_list:
         # print(type(booking))
-        cli.echo(f'Booking ID: {booking.booking_id}, Customer ID: {booking.cst_id}, Car Detail ID: {booking.car_dtl_id}, Start Date: {
+        cli.echo(f'{index+1}Booking ID: {booking.booking_id}, Customer ID: {booking.cst_id}, Car Detail ID: {booking.car_dtl_id}, Start Date: {
             booking.start_date}, End Date: {booking.end_date}, Total Fee: {booking.total_fee}, Status: {booking.status}')
 
     cli.pause('Press any key to continue')

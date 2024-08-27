@@ -8,6 +8,9 @@ def view_my_booking(controllers: dict, credentials: dict, cli: Cli):
     customer_controller = controllers['customer_controller']
     username = credentials['username']
 
+    cli.clear_screen()
+    cli.echo('======= View My Bookings =======')
+
     req = {
         'username': username
     }

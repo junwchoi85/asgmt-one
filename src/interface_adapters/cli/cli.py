@@ -13,10 +13,12 @@ class Cli:
     def echo(self, message):
         print(message)
 
-    def prompt(self, message, type_=str):
+    def prompt(self, message, type_=str, default_=None):
         while True:
             try:
                 user_input = input(message)
+                if user_input == '' and default_ is not None:
+                    return default_
                 return type_(user_input)
             except ValueError:
                 print(f"Invalid input. Please enter a valid {type_.__name__}.")
@@ -33,4 +35,5 @@ class Cli:
         exit()
 
     def delay(self, seconds=2):
+        print('Please wait...')
         time.sleep(seconds)

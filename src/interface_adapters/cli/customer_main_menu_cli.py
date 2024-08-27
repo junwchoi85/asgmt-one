@@ -1,4 +1,4 @@
-from interface_adapters.cli.car_list_cli import view_car_list
+from interface_adapters.cli.car_list_cli import car_list
 from interface_adapters.cli.cli import Cli
 from interface_adapters.cli.view_customer_booking_cli import view_my_booking
 
@@ -25,9 +25,9 @@ def customer_main_menu(controllers: dict, credentials: dict, cli: Cli):
             choice = cli.prompt(
                 'Invalid option. Please try again. ', type_=int)
         if choice == 1:
-            view_car_list(controllers, credentials, cli)
+            car_list(controllers, credentials, cli)
         elif choice == 2:
-            view_car_list(controllers, credentials, cli)   # same as choice 1
+            car_list(controllers, credentials, cli)   # same as choice 1
         elif choice == 3:
             view_my_booking(controllers, credentials, cli)
         elif choice == 4:

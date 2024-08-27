@@ -51,10 +51,10 @@ def add_car_info(controllers: dict, credentials: dict, cli: Cli):
 
     if is_success(res):
         cli.echo('Car added successfully')
-        cli.pause(info='Press any key to continue...')
+        cli.pause()
         return
     else:
         cli.echo('Failed to add car')
         cli.echo(res['message'])
-        cli.pause(info='Press any key to continue...')
+        cli.pause()
         return
