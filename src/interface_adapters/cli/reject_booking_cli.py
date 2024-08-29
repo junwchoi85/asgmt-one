@@ -4,8 +4,11 @@ from interface_adapters.cli.cli import Cli
 def reject_booking(controllers: dict, credentials: dict, cli: Cli):
     user_controller = controllers['user_controller']
 
+    cli.clear_screen()
+    cli.echo('======= Reject Booking =======\n')
+
     req = {
-        'booking_status': 'reserved'
+        'status': 'reserved'
     }
     res = user_controller.get_booking_list(req)
     booking_list = res['booking_list']
@@ -16,8 +19,9 @@ def reject_booking(controllers: dict, credentials: dict, cli: Cli):
             booking.start_date}, End Date: {booking.end_date}, Total Fee: {booking.total_fee}, Status: {booking.status}')
 
     while True:
-        action = cli.prompt(
+        cli.echo(
             'Type in the number of the booking to reject it, or type \'exit\' to exit.')
+        action = cli.prompt('choose an option: ')
         if action.lower() == 'exit':
             # return to previous menu
             return

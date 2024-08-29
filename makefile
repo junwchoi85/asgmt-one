@@ -54,8 +54,7 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 	find . -type f -name '*.db' -delete
-	rm -rf dist
-	rm -rf build
+	rm -rf dist build
 	find . -type f -name '*.flag' -delete
 	@echo "Cleanup complete."
 
@@ -68,12 +67,12 @@ run:
 .PHONY: package
 package: install
 	@echo "Packaging project..."
-	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --onefile src/main.py
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --clean --onefile src/main.py
 	@echo "Project packaged."
 
 # Windows용 실행 파일 생성
 .PHONY: package_win
 package_win: install
 	@echo "Packaging project for Windows..."
-	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --onefile --windowed --name main.exe src/main.py
+	PYTHONPATH=$(shell pwd)/src $(PYTHON) -m pyinstaller --clean --onefile --windowed --name main.exe src/main.py
 	@echo "Windows executable packaged."
