@@ -56,7 +56,7 @@ clean:
 	find . -type f -name '*.db' -delete
 	rm -rf dist
 	rm -rf build
-	rm main.exe.spec
+	find . -type f -name '*.flag' -delete
 	@echo "Cleanup complete."
 
 # 가상환경을 활성화하고 main.py를 실행하는 규칙
