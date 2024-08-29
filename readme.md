@@ -59,7 +59,7 @@ To use this project, follow these steps:
 5. Run unit tests by running `make test`.
 6. Clean cache files and DB by running `make clean`.
 
-If you are using the preloaded data, you can sign in with the following credentials:
+If you are using the preloaded data, you can sign in as the admin with the following credentials:
 - Username: admin
 - Password: 1234
 
