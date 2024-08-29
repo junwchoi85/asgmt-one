@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 
@@ -32,7 +33,7 @@ class Cli:
     def exit(self):
         print('Bye bye!')
         self.pause()
-        exit()
+        sys.exit()
 
     def delay(self, seconds=2):
         print('Please wait...')

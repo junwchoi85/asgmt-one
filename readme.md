@@ -59,7 +59,9 @@ To use this project, follow these steps:
 5. Run unit tests by running `make test`.
 6. Clean cache files and DB by running `make clean`.
 
-Make sure to update the `config.js` file with the appropriate settings for your environment.
+If you are using the preloaded data, you can sign in with the following credentials:
+- Username: admin
+- Password: 1234
 
 Enjoy using the project!
 

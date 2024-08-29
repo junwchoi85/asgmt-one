@@ -9,6 +9,10 @@ def signIn(controllers: dict, cli: Cli):
     cli.clear_screen()
     cli.echo('======= Admin Sign In =======')
     cli.echo('Admin sign In. Please enter your credentials:\n')
+    cli.echo(
+        'If you are using the preloaded data, you can sign in with the following credentials:')
+    cli.echo('Username: admin')
+    cli.echo('Password: 1234\n')
     username = cli.prompt('Username: ')
     password = cli.prompt('Password: ')
 
