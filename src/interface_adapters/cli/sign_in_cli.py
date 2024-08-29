@@ -7,13 +7,14 @@ def signIn(controllers: dict, cli: Cli):
     """ Sign In """
     # TODO : encrypt password
     cli.clear_screen()
-    cli.echo('Admin sign In. Please enter your credentials')
-    username = cli.prompt('Admin Username: ')
-    password = cli.prompt('Admin Password: ')
+    cli.echo('======= Admin Sign In =======')
+    cli.echo('Admin sign In. Please enter your credentials:\n')
+    username = cli.prompt('Username: ')
+    password = cli.prompt('Password: ')
 
     user_controller = controllers['user_controller']
     if not username or not password:
-        cli.echo('Username and password are required')
+        cli.echo('Username and password are required.')
         return
     req = {
         'username': username,
@@ -23,7 +24,7 @@ def signIn(controllers: dict, cli: Cli):
     res = user_controller.sign_in(req)
 
     if is_success(res):
-        cli.echo('Sign in successful')
+        cli.echo('Sign in successful.')
         credentials = {
             'username': username,
             # 'password': password

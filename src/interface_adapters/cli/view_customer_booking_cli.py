@@ -18,6 +18,7 @@ def view_my_booking(controllers: dict, credentials: dict, cli: Cli):
 
     if not booking_details:
         cli.echo('You have no bookings.')
+        cli.pause()
         return
 
     cli.echo('\nYour Bookings:')

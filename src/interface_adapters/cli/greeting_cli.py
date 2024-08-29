@@ -14,22 +14,22 @@ def greet(controllers: dict, cli: Cli):
     while True:
         cli.clear_screen()
         cli.echo(
-            """
-            ============== Car Rental System ==============
-            Hello, welcome to the Car Rental System!      
-            Please choose an option from the menu below:  
-            
-            1. Sign In
-            2. Sign Up
-            3. Exit
-            4. Help
-            5. Admin
-            ===============================================
-            """)
+            '''
+============== Car Rental System ==============
+Hello, welcome to the Car Rental System!      
+Please choose an option from the menu below:  
 
-        option = cli.prompt('Input number ', type_=int)
+1. Sign In
+2. Sign Up
+3. Exit
+4. Help
+5. Admin
+===============================================
+            ''')
+
+        option = cli.prompt('Select an Option: ', type_=int)
         while (option < 1 or option > 5):
-            option = cli.prompt('Invalid option. Please try again ', type_=int)
+            option = cli.prompt('Invalid option. Please try again.', type_=int)
 
         if option == 1:
             customer_sign_in(controllers, cli)
